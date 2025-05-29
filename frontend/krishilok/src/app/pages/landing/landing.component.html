@@ -89,9 +89,8 @@
                 routerLink="/login">
                 {{ 'LOGIN' | translate }}
               </button>
-              <button
-                class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 px-8 md:px-12 rounded-lg text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
-                routerLink="/register">
+              <button [routerLink]="['/register']"
+                class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 px-8 md:px-12 rounded-lg text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
                 {{ 'REGISTER' | translate }}
               </button>
             </div>

@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
+
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [TranslateModule],
+  imports: [TranslateModule, RouterModule],
   templateUrl: './landing.component.html',
-  styleUrls: ['./landing.component.css']
+  // styleUrls: ['./landing.component.css']
 })
 export class LandingComponent {
   constructor(private translate: TranslateService) {
