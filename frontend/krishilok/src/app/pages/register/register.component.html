@@ -46,7 +46,8 @@
         </header>
 
         <!-- Form Content -->
-        <div class="flex-grow px-6 lg:px-7 pb-7 max-h-[calc(100vh-140px)] overflow-y-scroll" style="display: flex; justify-content: space-around;">
+        <div class="flex-grow px-6 lg:px-7 pb-7 max-h-[calc(100vh-140px)] overflow-y-scroll"
+            style="display: flex; justify-content: space-around;">
             <div class="max-w-md mx-auto lg:mx-0">
                 <h2 class="text-3xl lg:text-4xl font-bold text-gray-800 mb-8">Create an Account</h2>
                 <form class="space-y-6" (ngSubmit)="onSubmit()">
@@ -122,13 +123,42 @@
 
                     <!-- District + State -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <input type="text" name="district" [(ngModel)]="formData.district" placeholder="District/Taluk"
-                            class="w-full px-2 py-2 border-2 border-gray-300 rounded-lg placeholder-gray-500 focus:border-green-600 focus:outline-none"
-                            required />
-                        <input type="text" name="state" [(ngModel)]="formData.state" placeholder="State"
-                            class="w-full px-2 py-2 border-2 border-gray-300 rounded-lg placeholder-gray-500 focus:border-green-600 focus:outline-none"
-                            required />
+                        <!-- State Dropdown -->
+                        <div class="relative w-full">
+                            <select name="state" [(ngModel)]="formData.state" (change)="onStateChange(formData.state)"
+                                class="w-full appearance-none px-2 pr-10 py-2 border-2 border-gray-300 text-gray-500 rounded-lg focus:border-green-600 focus:outline-none"
+                                required>
+                                <option value="" disabled selected>Select State</option>
+                                <option *ngFor="let state of states" [value]="state">{{ state }}</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                                <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- District Dropdown -->
+                        <div class="relative w-full">
+                            <select name="district" [(ngModel)]="formData.district"
+                                class="w-full appearance-none px-2 pr-10 py-2 border-2 border-gray-300 text-gray-500 rounded-lg focus:border-green-600 focus:outline-none"
+                                required>
+                                <option value="" disabled selected>Select District</option>
+                                <option *ngFor="let district of districts" [value]="district">{{ district }}</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-2 flex items-center">
+                                <svg class="w-4 h-4 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
+
+
 
                     <!-- Submit -->
                     <button type="submit"
@@ -141,8 +171,9 @@
 
         <!-- Footer -->
         <footer class="px-6 lg:px-8 py-3 border-t border-gray-200 bg-white mt-auto">
-             <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
-                <p>&copy; 2025 <span class="text-yellow-600 font-medium">KrishiLok</span> All rights reserved.</p>
+            <div class="flex flex-col sm:flex-row justify-between items-center text-sm text-gray-600">
+                <p>&copy; 2025 <a href="#" class=" text-yellow-600 hover:text-yellow-600 font-medium">KrishiLok</a> All
+                    rights reserved.</p>
                 <p class="mt-2 sm:mt-0">
                     <a href="#" class="hover:text-green-600 transition-colors duration-300">Terms & Conditions</a>
                 </p>
