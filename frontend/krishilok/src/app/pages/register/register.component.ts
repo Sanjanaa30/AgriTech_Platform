@@ -30,6 +30,56 @@ export class RegisterComponent implements OnInit {
     state: ''
   };
 
+  // Allow only digits (0–9) on keypress
+  allowOnlyDigits(event: KeyboardEvent): void {
+    if (!/^\d$/.test(event.key)) {
+      event.preventDefault();
+    }
+  }
+
+  // Handle mobile input and ensure max 10 digits
+  onMobileInput(event: any): void {
+    const digitsOnly = event.target.value.replace(/\D/g, '').slice(0, 10);
+    this.formData.mobile = digitsOnly;
+  }
+
+  // Optional: Validate mobile number on submit or blur
+  isValidMobile(): boolean {
+    return /^\d{10}$/.test(this.formData.mobile);
+  }
+
+
+  aadharRaw: string = ''; // only digits
+
+  onAadharInput(event: any): void {
+    const input = event.target.value.replace(/\D/g, ''); // remove non-digits
+    this.aadharRaw = input.slice(0, 12); // max 12 digits
+
+    // Update the formData with formatted Aadhaar
+    this.formData.aadhar = this.formatAadhar(this.aadharRaw);
+  }
+
+  formatAadhar(value: string): string {
+    // Format into 1234-5678-9012
+    const parts = [];
+    for (let i = 0; i < value.length; i += 4) {
+      parts.push(value.substring(i, i + 4));
+    }
+    return parts.join('-');
+  }
+
+  allowOnlyNumbers(event: KeyboardEvent): void {
+    const key = event.key;
+    if (!/^\d$/.test(key)) {
+      event.preventDefault();
+    }
+  }
+
+  isValidAadhar(): boolean {
+    return /^\d{12}$/.test(this.aadharRaw);
+  }
+
+
   states: string[] = [];
   districts: string[] = [];
 

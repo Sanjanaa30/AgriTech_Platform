@@ -78,3 +78,13 @@ form {
     overflow: hidden;
   }
 }
+
+/* Hide browser's built-in eye/reveal icon in Chromium/Edge */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-webkit-credentials-auto-fill-button,
+input[type="password"]::-webkit-textfield-decoration-container,
+input[type="password"]::-webkit-textfield-decoration {
+  display: none !important;
+  pointer-events: none;
+  appearance: none;
+}
