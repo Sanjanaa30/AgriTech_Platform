@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import stateDistrictData from '../../../assets/states-districts.json';
 import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service'; // ✅ Include this import
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -24,17 +24,17 @@ export class RegisterComponent implements OnInit {
     firstName: '',
     lastName: '',
     mobile: '',
-    aadhaar: '',      // ✅ Fix typo: use 'aadhaar'
+    aadhaar: '',
     email: '',
     password: '',
-    role: '',         // ✅ Use 'role' not 'roles'
+    role: '',
     state: '',
     district: ''
   };
 
   states: string[] = [];
   districts: string[] = [];
-  aadharRaw: string = ''; // for validation only
+  aadharRaw: string = '';
 
   errorMessage: string = '';
   successMessage: string = '';
@@ -59,10 +59,6 @@ export class RegisterComponent implements OnInit {
     this.formData.mobile = digitsOnly;
   }
 
-  isValidMobile(): boolean {
-    return /^\d{10}$/.test(this.formData.mobile);
-  }
-
   onAadharInput(event: any): void {
     const input = event.target.value.replace(/\D/g, '');
     this.aadharRaw = input.slice(0, 12);
@@ -80,7 +76,6 @@ export class RegisterComponent implements OnInit {
   isValidAadhar(): boolean {
     return /^\d{12}$/.test(this.aadharRaw);
   }
-
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -124,7 +119,7 @@ export class RegisterComponent implements OnInit {
   }
 
   validateForm(): boolean {
-    const mobileRegex = /^\d{10}$/; // 10 digits
+    const mobileRegex = /^\d{10}$/;
     const aadhaarRegex = /^\d{12}$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
@@ -154,7 +149,10 @@ export class RegisterComponent implements OnInit {
   }
 
   submitForm() {
+    this.errorMessage = '';
+    this.successMessage = '';
     this.validatePassword();
+
     if (this.passwordError) {
       this.errorMessage = 'Please fix the password rules before submitting.';
       return;
@@ -162,22 +160,27 @@ export class RegisterComponent implements OnInit {
 
     if (!this.validateForm()) return;
 
-    // ✅ Add +91 prefix before sending to backend
     const payload = {
       ...this.formData,
-      mobile: `+91${this.formData.mobile}`,  // 🔧 Add country code
+      mobile: `+91${this.formData.mobile}`,
       aadhaar: this.aadharRaw
     };
 
     this.authService.registerUser(payload).subscribe({
       next: (res) => {
         this.successMessage = res.message || 'Account created!';
-        this.router.navigate(['/login']);
+
+        // ✅ Save data for OTP screen
+        localStorage.setItem('pendingVerification', JSON.stringify({
+          email: this.formData.email,
+          mobile: this.formData.mobile
+        }));
+
+        this.router.navigate(['/verify-otp']);
       },
       error: (err) => {
-        this.errorMessage = err.error.message || 'Something went wrong!';
+        this.errorMessage = err.error?.message || 'Something went wrong!';
       }
     });
   }
-
 }
