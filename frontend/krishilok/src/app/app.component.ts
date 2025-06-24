@@ -14,17 +14,18 @@ import { TranslateModule } from '@ngx-translate/core';
     TranslateModule // ✅ Optional, only if you're using translate pipe in app.component.html
   ]
 })
-
 export class AppComponent {
-  title = 'krishilok';
+  constructor(
+    private translate: TranslateService,
+    private languageService: LanguageService
+  ) {
+    const lang = this.languageService.getCurrentLanguage();
+    this.translate.setDefaultLang(lang);
+    this.translate.use(lang); // 👈 apply language
 
-    constructor(private translate: TranslateService, private languageService: LanguageService) {
-    // Set the initial language
-    this.translate.setDefaultLang('en');
-
-    // React to language change
-    this.languageService.getLanguage().subscribe((lang) => {
-      this.translate.use(lang);
+    // Optional: sync when changed later
+    this.languageService.getLanguage().subscribe((newLang) => {
+      this.translate.use(newLang);
     });
   }
 }

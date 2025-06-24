@@ -6,8 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
   private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
+  private defaultLang = 'en';
+
   private languageSubject = new BehaviorSubject<string>(
-    this.isBrowser ? localStorage.getItem('language') || 'en' : 'en'
+    this.isBrowser ? localStorage.getItem('language') || this.defaultLang : this.defaultLang
   );
 
   setLanguage(lang: string) {

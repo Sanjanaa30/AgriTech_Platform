@@ -4,36 +4,19 @@
   <div class="w-full lg:w-1/2 bg-white flex flex-col h-full">
 
     <!-- Header -->
-    <header class="flex items-center justify-between p-3 lg:p-3 bg-white">
+    <header class="flex flex-col items-center p-3 bg-white lg:flex-row lg:justify-between">
       <div class="flex items-center space-x-3">
         <img src="assets/logo-png.png" alt="KrishiLok Logo"
           class="w-12 h-12 md:w-16 md:h-16 object-contain rounded-full shadow-md" />
         <div class="md:text-left">
-          <h1 class="text-xl md:text-2xl font-bold text-gray-800">KrishiLok</h1>
-          <p class="text-xs md:text-sm text-gray-600">A Community<br class="block md:hidden"> Rooted in Growth</p>
+          <h1 class="text-xl md:text-2xl font-bold text-gray-800"> {{ 'TITLE' | translate }} </h1>
+          <p class="text-xs md:text-sm text-gray-600"> {{ 'TAGLINE' | translate }}</p>
         </div>
       </div>
 
-      <div class="md:w-auto flex justify-center md:justify-end">
+      <div class="w-full md:w-auto flex justify-center md:justify-end mt-5 lg:mt-0">
         <div class="relative">
-          <select
-            class="bg-yellow-400 text-black font-semibold py-2 px-6 pr-10 rounded-lg text-sm md:text-base appearance-none cursor-pointer hover:bg-yellow-500 transition-colors duration-300 shadow-md">
-            <option value="en">English</option>
-            <option value="kn">ಕನ್ನಡ</option>
-            <option value="hi">हिन्दी</option>
-            <option value="pa">ਪੰਜਾਬੀ</option>
-            <option value="gu">ગુજરાતી</option>
-            <option value="mr">मराठी</option>
-            <option value="ta">தமிழ்</option>
-            <option value="te">తెలుగు</option>
-          </select>
-          <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <svg class="w-4 h-4 md:w-5 md:h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd"
-                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                clip-rule="evenodd" />
-            </svg>
-          </div>
+          <app-language-selector></app-language-selector>
         </div>
       </div>
     </header>
@@ -44,7 +27,7 @@
         <!-- Login Form -->
         <div class="mb-8">
           <h2 class="text-3xl font-normal text-gray-700">
-            Welcome back to <span class="text-green-600 font-semibold">KrishiLok</span>
+            Welcome back to <span class="text-green-600 font-semibold"> {{ 'TITLE' | translate }} </span>
           </h2>
         </div>
         <form class="space-y-6" (submit)="loginWithPassword(); $event.preventDefault();">

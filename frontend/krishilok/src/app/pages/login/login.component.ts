@@ -2,15 +2,31 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { LanguageSelectorComponent } from '../../components/language-selector/language-selector.component';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, LanguageSelectorComponent, TranslateModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+  constructor(
+    private translate: TranslateService,
+    private router: Router,
+    private languageService: LanguageService
+  ) {
+    this.translate.setDefaultLang('en');
+  }
+
+  switchLang(event: Event) {
+    const selectedLang = (event.target as HTMLSelectElement).value;
+    this.translate.use(selectedLang);
+  }
   identifier: string = '';
   otp: string = '';
   password: string = '';
@@ -18,7 +34,6 @@ export class LoginComponent {
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private router: Router) { }
 
   getOtp(): void {
     if (!this.identifier) {
