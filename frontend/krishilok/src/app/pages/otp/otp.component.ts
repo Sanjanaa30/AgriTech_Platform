@@ -107,9 +107,16 @@ export class OtpComponent implements OnInit, OnDestroy {
 
     setTimeout(() => {
       this.isLoading = false;
+
       if (otpCode === '123456') {
         this.verificationSuccess = true;
         console.log('OTP verified successfully!');
+
+        // ✅ Redirect after 1 second (or immediately if you prefer)
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 1000);
+
       } else {
         this.showError = true;
         this.verificationSuccess = false;
@@ -118,6 +125,7 @@ export class OtpComponent implements OnInit, OnDestroy {
       }
     }, 2000);
   }
+
 
   resendCode(): void {
     if (this.resendTimer > 0) return;

@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 import { RouterModule } from '@angular/router';
+import { LanguageSelectorComponent } from '../../components/language-selector/language-selector.component';
 
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [TranslateModule, RouterModule],
+  imports: [TranslateModule, RouterModule, LanguageSelectorComponent],
   templateUrl: './landing.component.html',
   // styleUrls: ['./landing.component.css']
 })

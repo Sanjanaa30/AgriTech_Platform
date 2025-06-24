@@ -1,0 +1,69 @@
+<div *ngIf="section === 'my-crops'">
+    <!-- My Crops content here -->
+    <div *ngIf="section === 'my-crops'" class="p-6 text-gray-800">
+        <!-- Header and Add Button -->
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-semibold">🌾 My Crops</h2>
+            <button (click)="openAddCropModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                ➕ Add Crop
+            </button>
+        </div>
+
+        <!-- Crop Summary -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <div class="bg-white rounded shadow p-4">
+                <p class="text-sm text-gray-600">Total Crops</p>
+                <h3 class="text-xl font-bold">{{ crops.length }}</h3>
+            </div>
+            <div class="bg-white rounded shadow p-4">
+                <p class="text-sm text-gray-600">Crop Types</p>
+                <h3 class="text-xl font-bold">{{ uniqueCropTypes }}</h3>
+            </div>
+            <div class="bg-white rounded shadow p-4">
+                <p class="text-sm text-gray-600">Sown Crops</p>
+                <h3 class="text-xl font-bold">{{ sownCrops }}</h3>
+            </div>
+        </div>
+
+        <!-- Crops Table -->
+        <div class="overflow-auto">
+            <table class="min-w-full bg-white rounded shadow">
+                <thead class="bg-green-600 text-white">
+                    <tr>
+                        <th class="text-left px-4 py-2">Crop Name</th>
+                        <th class="text-left px-4 py-2">Type</th>
+                        <th class="text-left px-4 py-2">Sowing Date</th>
+                        <th class="text-left px-4 py-2">Status</th>
+                        <th class="text-left px-4 py-2">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let crop of crops" class="border-b hover:bg-gray-100">
+                        <td class="px-4 py-2">{{ crop.name }}</td>
+                        <td class="px-4 py-2">{{ crop.type }}</td>
+                        <td class="px-4 py-2">{{ crop.sowingDate }}</td>
+                        <td class="px-4 py-2">{{ crop.status }}</td>
+                        <td class="px-4 py-2 space-x-2">
+                            <button (click)="editCrop(crop)" class="text-blue-600 hover:underline">Edit</button>
+                            <button (click)="deleteCrop(crop)" class="text-red-600 hover:underline">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal (Optional) -->
+        <!-- You can add an *ngIf modal block here if needed -->
+    </div>
+
+</div>
+
+<div *ngIf="section === 'ai-insights'">
+    <!-- AI Insights content -->
+</div>
+
+<div *ngIf="section === 'marketplace'">
+    <!-- Marketplace content -->
+</div>
+
+<!-- and so on -->

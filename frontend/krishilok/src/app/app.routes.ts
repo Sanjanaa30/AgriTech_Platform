@@ -1,6 +1,8 @@
 import { Routes } from '@angular/router';
 import { LandingComponent } from './pages/landing/landing.component';
-import { OtpComponent } from './pages/otp/otp.component'; // ⬅️ Make sure this import exists
+import { OtpComponent } from './pages/otp/otp.component';
+import { FarmerDashboardComponent } from './pages/farmer-dashboard/farmer-dashboard.component'
+import {FarmerSectionComponent} from './pages/farmer-section/farmer-section.component'
 
 export const routes: Routes = [
   {
@@ -15,5 +17,17 @@ export const routes: Routes = [
   {
     path: 'verify-otp',
     component: OtpComponent
-  }
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./pages/login/login.component').then(m => m.LoginComponent)
+  },
+  {
+    path: 'dashboard',
+    component: FarmerDashboardComponent
+  },
+  {
+  path: 'dashboard/:section',
+  component: FarmerSectionComponent
+}
 ];

@@ -5,10 +5,10 @@ import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router'; // ✅ Add this
+import { RouterModule } from '@angular/router';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -20,8 +20,9 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideClientHydration(withEventReplay()),
     importProvidersFrom(
+      HttpClientModule, // ✅ Needed for TranslateHttpLoader
       FormsModule,
-      RouterModule, // ✅ This enables [routerLink]
+      RouterModule,
       TranslateModule.forRoot({
         defaultLanguage: 'en',
         loader: {
@@ -33,4 +34,3 @@ export const appConfig: ApplicationConfig = {
     )
   ]
 };
-

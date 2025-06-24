@@ -16,35 +16,17 @@
           <img src="assets/logo-png.png" alt="KrishiLok Logo"
             class="w-12 h-12 md:w-16 md:h-16 object-contain rounded-full shadow-md" />
           <div class="md:text-left">
-            <h1 class="text-xl md:text-2xl font-bold text-gray-800">KrishiLok</h1>
-            <p class="text-xs md:text-sm text-gray-600">A Community<br class="block md:hidden"> Rooted in Growth</p>
+            <h1 class="text-xl md:text-2xl font-bold text-gray-800"> {{ 'TITLE' | translate }} </h1>
+            <p class="text-xs md:text-sm text-gray-600"> {{ 'TAGLINE' | translate }} </p>
           </div>
         </div>
 
         <!-- Language Selector -->
         <div class="w-full md:w-auto flex justify-center md:justify-end">
           <div class="relative">
-            <select (change)="switchLang($event)"
-              class="bg-yellow-400 text-black font-semibold py-2 px-6 pr-10 rounded-lg text-sm md:text-base appearance-none cursor-pointer hover:bg-yellow-500 transition-colors duration-300 shadow-md">
-              <option value="en">English</option>
-              <option value="kn">ಕನ್ನಡ</option>
-              <option value="hi">हिन्दी</option>
-              <option value="pa">ਪੰਜਾਬੀ</option>
-              <option value="gu">ગુજરાતી</option>
-              <option value="mr">मराठी</option>
-              <option value="ta">தமிழ்</option>
-              <option value="te">తెలుగు</option>
-            </select>
-            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <svg class="w-4 h-4 md:w-5 md:h-5 text-black" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd"
-                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                  clip-rule="evenodd" />
-              </svg>
-            </div>
+            <app-language-selector></app-language-selector>
           </div>
         </div>
-
       </div>
     </header>
 
@@ -84,11 +66,10 @@
 
             <!-- Action Buttons -->
             <div class="flex flex-col sm:flex-row gap-4 md:gap-6">
-              <button
-                class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-4 px-8 md:px-12 rounded-lg text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
+              <a class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold py-4 px-8 md:px-12 rounded-lg text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg"
                 routerLink="/login">
                 {{ 'LOGIN' | translate }}
-              </button>
+              </a>
               <button [routerLink]="['/register']"
                 class="bg-yellow-500 hover:bg-yellow-600 text-black font-semibold py-4 px-8 md:px-12 rounded-lg text-base md:text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
                 {{ 'REGISTER' | translate }}
