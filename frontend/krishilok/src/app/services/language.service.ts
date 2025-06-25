@@ -1,22 +1,12 @@
-import { Injectable, inject } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { PLATFORM_ID } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageService {
-  private isBrowser = isPlatformBrowser(inject(PLATFORM_ID));
-  private defaultLang = 'en';
-
-  private languageSubject = new BehaviorSubject<string>(
-    this.isBrowser ? localStorage.getItem('language') || this.defaultLang : this.defaultLang
-  );
+  private languageSubject = new BehaviorSubject<string>('en'); // always default to English
 
   setLanguage(lang: string) {
-    if (this.isBrowser) {
-      localStorage.setItem('language', lang);
-    }
-    this.languageSubject.next(lang);
+    this.languageSubject.next(lang); // no persistence
   }
 
   getLanguage() {

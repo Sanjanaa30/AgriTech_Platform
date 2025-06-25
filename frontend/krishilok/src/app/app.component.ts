@@ -19,13 +19,14 @@ export class AppComponent {
     private translate: TranslateService,
     private languageService: LanguageService
   ) {
-    const lang = this.languageService.getCurrentLanguage();
-    this.translate.setDefaultLang(lang);
-    this.translate.use(lang); // 👈 apply language
+    this.translate.setDefaultLang('en');
+    this.translate.use('en'); // Always load English on every visit
 
-    // Optional: sync when changed later
-    this.languageService.getLanguage().subscribe((newLang) => {
-      this.translate.use(newLang);
+    // Optional: reflect any manual change temporarily
+    this.languageService.getLanguage().subscribe(lang => {
+      this.translate.use(lang);
     });
   }
+
+
 }

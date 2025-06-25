@@ -1,26 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { LanguageService } from '../../services/language.service';
 import { CommonModule } from '@angular/common';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-language-selector',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TranslateModule],
   template: `
-    <select
-      #langSelect
-      class="bg-yellow-400 text-black font-semibold text-center py-2 px-4 rounded-lg text-sm md:text-base appearance-none cursor-pointer hover:bg-yellow-500 transition-colors duration-300 shadow-md"
-      [value]="currentLang"
-      (change)="onLanguageChange(langSelect.value)"
-    >
-      <option *ngFor="let lang of languages" [value]="lang.code">
-        {{ lang.label }}
-      </option>
-    </select>
+<select
+  #langSelect
+  class="bg-yellow-400 text-black font-semibold py-2 px-5 rounded-lg text-sm md:text-base appearance-none cursor-pointer hover:bg-yellow-500 transition-colors duration-300 shadow-md text-center"
+  [value]="currentLang"
+  (change)="onLanguageChange(langSelect.value)"
+>
+  <option disabled selected value="">{{ 'SELECT_LANGUAGE' | translate }}</option>
+  <option *ngFor="let lang of languages" [value]="lang.code">
+    {{ lang.label }}
+  </option>
+</select>
   `
 })
 export class LanguageSelectorComponent implements OnInit {
-  currentLang = 'en';
+  currentLang: string = '';
 
   languages = [
     { code: 'en', label: 'English' },
@@ -51,7 +53,7 @@ export class LanguageSelectorComponent implements OnInit {
   constructor(private languageService: LanguageService) { }
 
   ngOnInit(): void {
-    this.currentLang = this.languageService.getCurrentLanguage() || 'en';
+    this.currentLang = ''; // nothing selected initially
   }
 
   onLanguageChange(lang: string): void {
