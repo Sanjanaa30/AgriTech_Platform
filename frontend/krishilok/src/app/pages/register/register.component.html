@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Email -->
-                    <input type="email" name="email" [(ngModel)]="formData.email" placeholder="Email Address (Optional)"
+                    <input type="email" name="email" [(ngModel)]="formData.email" placeholder="Email Address"
                         class="w-full px-2 py-2 border-2 border-gray-300 rounded-lg placeholder-gray-500 focus:border-green-600 focus:outline-none" />
 
                     <!-- Password -->
@@ -223,9 +223,9 @@
                     <div *ngIf="errorMessage" class="text-red-600 text-sm mb-2">{{ errorMessage }}</div>
                     <div *ngIf="successMessage" class="text-green-600 text-sm mb-2">{{ successMessage }}</div>
 
-                    <button type="submit" (click)="submitForm()"
-                        class="w-full bg-green-800 hover:bg-green-900 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg">
-                        Create Account
+                    <button type="submit" (click)="submitForm()" [disabled]="isSubmitting"
+                        class="w-full bg-green-800 hover:bg-green-900 text-white font-semibold py-4 px-6 rounded-lg text-lg transition-all duration-300 transform hover:scale-105 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                        {{ isSubmitting ? 'Creating...' : 'Create Account' }}
                     </button>
                 </form>
             </div>

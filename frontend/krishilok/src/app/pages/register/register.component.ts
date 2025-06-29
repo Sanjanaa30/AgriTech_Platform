@@ -18,6 +18,7 @@ export class RegisterComponent implements OnInit {
   passwordTouched = false;
   passwordValid = false;
   passwordError = false;
+  isSubmitting: boolean = false;
   remainingRules: string[] = [];
 
   formData = {
@@ -122,13 +123,20 @@ export class RegisterComponent implements OnInit {
     const mobileRegex = /^\d{10}$/;
     const aadhaarRegex = /^\d{12}$/;
     const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!this.formData.firstName || !this.formData.lastName || !this.formData.mobile ||
-      !this.aadharRaw || !this.formData.password || !this.formData.state ||
+      !this.aadharRaw || !this.formData.email || !this.formData.password || !this.formData.state ||
       !this.formData.district || !this.formData.role) {
       this.errorMessage = 'Please fill all mandatory fields.';
       return false;
     }
+
+    if (!emailRegex.test(this.formData.email)) {
+      this.errorMessage = 'Please enter a valid email address.';
+      return false;
+    }
+
 
     if (!mobileRegex.test(this.formData.mobile)) {
       this.errorMessage = 'Mobile number must be exactly 10 digits.';
@@ -149,38 +157,46 @@ export class RegisterComponent implements OnInit {
   }
 
   submitForm() {
-    this.errorMessage = '';
-    this.successMessage = '';
-    this.validatePassword();
+  if (this.isSubmitting) return;
+  this.isSubmitting = true;
 
-    if (this.passwordError) {
-      this.errorMessage = 'Please fix the password rules before submitting.';
-      return;
-    }
+  this.errorMessage = '';
+  this.successMessage = '';
+  this.validatePassword();
 
-    if (!this.validateForm()) return;
-
-    const payload = {
-      ...this.formData,
-      mobile: `+91${this.formData.mobile}`,
-      aadhaar: this.aadharRaw
-    };
-
-    this.authService.registerUser(payload).subscribe({
-      next: (res) => {
-        this.successMessage = res.message || 'Account created!';
-
-        // ✅ Save data for OTP screen
-        localStorage.setItem('pendingVerification', JSON.stringify({
-          email: this.formData.email,
-          mobile: this.formData.mobile
-        }));
-
-        this.router.navigate(['/verify-otp']);
-      },
-      error: (err) => {
-        this.errorMessage = err.error?.message || 'Something went wrong!';
-      }
-    });
+  if (this.passwordError) {
+    this.errorMessage = 'Please fix the password rules before submitting.';
+    this.isSubmitting = false;
+    return;
   }
+
+  if (!this.validateForm()) {
+    this.isSubmitting = false;
+    return;
+  }
+
+  const payload = {
+    ...this.formData,
+    mobile: `+91${this.formData.mobile}`.trim(),
+    aadhaar: this.aadharRaw.trim(),
+    email: this.formData.email.trim()
+  };
+
+  this.authService.registerUser(payload).subscribe({
+    next: (res) => {
+      this.successMessage = res.message || 'Account created!';
+      localStorage.setItem('pendingVerification', JSON.stringify({
+        email: this.formData.email,
+        mobile: this.formData.mobile
+      }));
+      this.router.navigate(['/verify-otp']);
+      this.isSubmitting = false;
+    },
+    error: (err) => {
+      this.errorMessage = err.error?.message || 'Something went wrong!';
+      this.isSubmitting = false;
+    }
+  });
+}
+
 }
