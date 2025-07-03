@@ -3,6 +3,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const registerRoutes = require('./routes/registerRoutes');
+const otpRoutes = require('./routes/otpRoutes');
 
 const app = express();
 app.use(cors({
@@ -24,10 +26,10 @@ app.get('/', (req, res) => {
   res.send('🚀 Backend running...');
 });
 
+// Register routes
+app.use('/api/auth', registerRoutes);
+app.use('/api/auth', otpRoutes);
+
 // Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server started on port ${PORT}`));
-
-//registerRoutes
-const registerRoutes = require('./routes/registerRoutes');
-app.use('/api/auth', registerRoutes);

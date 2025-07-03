@@ -39,9 +39,11 @@
                 </div>
             </div>
 
+            <!-- ⏰ OTP Expired -->
+            <div *ngIf="otpExpired" class="text-red-500 text-center text-sm mb-2">
+                ⏰ OTP expired. Please request a new code.
+            </div>
 
-
-            <!-- Error Message -->
             <!-- ✅ Error Message -->
             <div *ngIf="showError" class="text-red-500 text-sm text-center mb-4">
                 <div class="flex items-center justify-center space-x-1">
@@ -50,7 +52,7 @@
                             d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
                             clip-rule="evenodd"></path>
                     </svg>
-                    <span>Invalid code. Please try again.</span>
+                    <span>{{ errorMessage || 'Invalid code. Please try again.' }}</span>
                 </div>
             </div>
 
@@ -89,6 +91,14 @@
                 <span *ngIf="resendTimer > 0">Resend in {{ resendTimer }}s</span>
             </button>
         </div>
+
+        <!-- ✅ Toast-like message -->
+        <div *ngIf="showResendMessage" class="text-center mt-4">
+            <div class="bg-green-100 text-green-700 px-4 py-2 rounded-lg inline-block font-medium shadow">
+                🔁 OTP sent again successfully!
+            </div>
+        </div>
+
 
         <!-- Back Link -->
         <!-- <div class="text-center mt-6">

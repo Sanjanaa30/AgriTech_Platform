@@ -1,9 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import stateDistrictData from '../../../assets/states-districts.json';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { isPlatformBrowser } from '@angular/common';
+import { Inject, PLATFORM_ID } from '@angular/core';
+
 
 @Component({
   selector: 'app-register',
@@ -12,7 +15,8 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-export class RegisterComponent implements OnInit {
+
+export class RegisterComponent implements OnInit, OnDestroy {
   showPassword = false;
   passwordFocused = false;
   passwordTouched = false;
@@ -20,6 +24,8 @@ export class RegisterComponent implements OnInit {
   passwordError = false;
   isSubmitting: boolean = false;
   remainingRules: string[] = [];
+  submissionInProgress = false;
+  hasSubmitted: boolean = false; // ⛔ for blocking refresh/back during submit
 
   formData = {
     firstName: '',
@@ -40,12 +46,45 @@ export class RegisterComponent implements OnInit {
   errorMessage: string = '';
   successMessage: string = '';
 
-  constructor(private authService: AuthService, private router: Router) { }
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) { }
 
   ngOnInit() {
     this.states = Object.keys(stateDistrictData);
+
+    if (isPlatformBrowser(this.platformId)) {
+      // ✅ Safe to access window and history now
+      window.addEventListener('beforeunload', this.confirmUnload);
+      history.pushState(null, '', location.href);
+      window.addEventListener('popstate', this.confirmBack);
+    }
   }
 
+  ngOnDestroy(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      window.removeEventListener('beforeunload', this.confirmUnload);
+      window.removeEventListener('popstate', this.confirmBack);
+      localStorage.removeItem('pendingVerification');  // ✅ Now safe
+    }
+  }
+
+  confirmUnload = (e: BeforeUnloadEvent) => {
+    if (this.hasSubmitted && !this.successMessage) {
+      e.preventDefault();
+      e.returnValue = '⚠️ Your registration is in progress. Are you sure you want to leave this page?';
+    }
+  }
+
+  confirmBack = () => {
+    if (this.hasSubmitted && !this.successMessage) {
+      alert('⚠️ Your registration is in progress. Please wait for OTP or complete the process.');
+      history.pushState(null, '', location.href);
+    }
+  }
   onStateChange(state: string) {
     this.formData.district = '';
     this.districts = (stateDistrictData as any)[state] || [];
@@ -157,46 +196,64 @@ export class RegisterComponent implements OnInit {
   }
 
   submitForm() {
-  if (this.isSubmitting) return;
-  this.isSubmitting = true;
+    if (this.isSubmitting) return;
 
-  this.errorMessage = '';
-  this.successMessage = '';
-  this.validatePassword();
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.isSubmitting = true;
+    this.hasSubmitted = true;
+    this.validatePassword();
 
-  if (this.passwordError) {
-    this.errorMessage = 'Please fix the password rules before submitting.';
-    this.isSubmitting = false;
-    return;
-  }
-
-  if (!this.validateForm()) {
-    this.isSubmitting = false;
-    return;
-  }
-
-  const payload = {
-    ...this.formData,
-    mobile: `+91${this.formData.mobile}`.trim(),
-    aadhaar: this.aadharRaw.trim(),
-    email: this.formData.email.trim()
-  };
-
-  this.authService.registerUser(payload).subscribe({
-    next: (res) => {
-      this.successMessage = res.message || 'Account created!';
-      localStorage.setItem('pendingVerification', JSON.stringify({
-        email: this.formData.email,
-        mobile: this.formData.mobile
-      }));
-      this.router.navigate(['/verify-otp']);
+    if (this.passwordError) {
+      this.errorMessage = 'Please fix the password rules before submitting.';
       this.isSubmitting = false;
-    },
-    error: (err) => {
-      this.errorMessage = err.error?.message || 'Something went wrong!';
-      this.isSubmitting = false;
+      this.submissionInProgress = false;
+      return;
     }
-  });
-}
 
+    if (!this.validateForm()) {
+      this.isSubmitting = false;
+      this.submissionInProgress = false;
+      return;
+    }
+
+    const payload = {
+      ...this.formData,
+      mobile: `+91${this.formData.mobile}`.trim(),
+      aadhaar: this.aadharRaw.trim(),
+      email: this.formData.email.trim()
+    };
+
+    this.authService.registerUser(payload).subscribe({
+      next: (res) => {
+        this.successMessage = res.message || 'Account created!';
+
+        // ✅ Make sure storage is written first
+        localStorage.setItem('pendingVerification', JSON.stringify({
+          email: this.formData.email,
+          mobile: `+91${this.formData.mobile}`
+        }));
+
+        // ✅ Ensure Angular has time to write to storage
+        setTimeout(() => {
+          this.router.navigate(['/verify-otp'], { queryParams: { fromRegister: true } }).then(success => {
+            if (isPlatformBrowser(this.platformId)) {
+              console.log('🟢 Navigating to OTP...', success);
+            }
+          });
+          this.isSubmitting = false;
+        }, 600);
+      },
+      error: (err) => {
+        console.error('❌ Registration error:', err);
+        if (err.status === 409 || err.error?.message?.includes('already exists')) {
+          this.errorMessage = 'A user already exists with this Email, Aadhaar, or Mobile number.';
+        } else {
+          this.errorMessage = err.error?.message || 'Something went wrong!';
+        }
+        this.isSubmitting = false;
+        this.hasSubmitted = false;
+      }
+    });
+  }
 }

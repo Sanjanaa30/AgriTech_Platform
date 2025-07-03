@@ -4,11 +4,12 @@ const { v4: uuidv4 } = require('uuid');
 const userSchema = new mongoose.Schema({
   _id: {
     type: String,
-    default: uuidv4 // UUID as the primary key
+    default: uuidv4
   },
   customId: {
     type: String,
-    unique: true // Example: FARMER_001, EXPERT_002
+    unique: true,
+    required: true
   },
   firstName: {
     type: String,
@@ -21,21 +22,24 @@ const userSchema = new mongoose.Schema({
   mobile: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true // ✅ index added
   },
   aadhaar: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true // ✅ index added
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
+    index: true // ✅ index added
   },
   password: {
     type: String,
-    required: true // hashed with bcrypt
+    required: true
   },
   state: {
     type: String,
@@ -46,17 +50,15 @@ const userSchema = new mongoose.Schema({
     required: true
   },
   roles: {
-    type: [String], // Stores array like ['farmer'], ['farmer', 'expert']
+    type: [String],
     required: true
   },
   isVerified: {
     type: Boolean,
-    default: false // Set to true after OTP verification
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    default: false
   }
+}, {
+  timestamps: true // ✅ adds createdAt and updatedAt automatically
 });
 
 module.exports = mongoose.model('User', userSchema);
