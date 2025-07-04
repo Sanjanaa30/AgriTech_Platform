@@ -11,15 +11,11 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   registerUser(userData: any): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/register`, userData);
+    return this.http.post<{ message: string }>(`${this.baseUrl}/pre-register`, userData);
   }
 
-  verifyEmailOtp(payload: { email: string; otp: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/verify-otp`, payload);
-  }
-
-  checkVerification(email: string): Observable<{ isVerified: boolean }> {
-    return this.http.get<{ isVerified: boolean }>(`${this.baseUrl}/check-verification/${email}`);
+  verifyAndRegister(payload: { userData: any, otp: string }): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.baseUrl}/register-after-otp`, payload);
   }
 
   resendOtp(email: string): Observable<{ message: string }> {

@@ -68,7 +68,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
     if (isPlatformBrowser(this.platformId)) {
       window.removeEventListener('beforeunload', this.confirmUnload);
       window.removeEventListener('popstate', this.confirmBack);
-      localStorage.removeItem('pendingVerification');  // ✅ Now safe
     }
   }
 
@@ -204,14 +203,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.hasSubmitted = true;
     this.validatePassword();
 
-    if (this.passwordError) {
+    if (this.passwordError || !this.validateForm) {
       this.errorMessage = 'Please fix the password rules before submitting.';
-      this.isSubmitting = false;
-      this.submissionInProgress = false;
-      return;
-    }
-
-    if (!this.validateForm()) {
       this.isSubmitting = false;
       this.submissionInProgress = false;
       return;
@@ -226,23 +219,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
     this.authService.registerUser(payload).subscribe({
       next: (res) => {
-        this.successMessage = res.message || 'Account created!';
+        this.successMessage = res.message || 'OTP sent successfully!';
 
-        // ✅ Make sure storage is written first
-        localStorage.setItem('pendingVerification', JSON.stringify({
-          email: this.formData.email,
-          mobile: `+91${this.formData.mobile}`
-        }));
+        // ✅ Store full payload for final submission after OTP verification
+        localStorage.setItem('pendingRegistration', JSON.stringify(payload));
 
-        // ✅ Ensure Angular has time to write to storage
         setTimeout(() => {
           this.router.navigate(['/verify-otp'], { queryParams: { fromRegister: true } }).then(success => {
             if (isPlatformBrowser(this.platformId)) {
               console.log('🟢 Navigating to OTP...', success);
             }
           });
-          this.isSubmitting = false;
-        }, 600);
+        }, 300);
       },
       error: (err) => {
         console.error('❌ Registration error:', err);

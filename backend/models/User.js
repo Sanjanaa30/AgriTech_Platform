@@ -52,10 +52,6 @@ const userSchema = new mongoose.Schema({
   roles: {
     type: [String],
     required: true
-  },
-  isVerified: {
-    type: Boolean,
-    default: false
   }
 }, {
   timestamps: true // ✅ adds createdAt and updatedAt automatically

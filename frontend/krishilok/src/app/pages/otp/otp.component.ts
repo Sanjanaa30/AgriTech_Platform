@@ -45,7 +45,7 @@ export class OtpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const tryLoadData = () => {
-        const dataRaw = localStorage.getItem('pendingVerification');
+        const dataRaw = localStorage.getItem('pendingRegistration');
         if (!dataRaw) {
           console.warn('🔁 Retrying to load localStorage...');
           setTimeout(tryLoadData, 100);  // ✅ no return
@@ -56,16 +56,17 @@ export class OtpComponent implements OnInit, OnDestroy {
         try {
           const data = JSON.parse(dataRaw);
           const email = data?.email;
-          const mobile = data?.mobile;
 
-          if (!email || !mobile) {
-            console.warn('⚠️ Missing or invalid email or mobile:', email, mobile);
+          if (!email) {
+            console.warn('⚠️ Missing email in user data:', data);
             this.router.navigate(['/register']);
             return;
           }
 
-          this.emailToVerify = email;
-          this.maskedEmail = email;
+          this.emailToVerify = email.trim().toLowerCase();
+          this.maskedEmail = this.emailToVerify;
+
+          console.log('📧 Email loaded from localStorage:', this.emailToVerify);
 
           this.route.queryParams.subscribe(params => {
             if (params['fromRegister']) {
@@ -88,7 +89,7 @@ export class OtpComponent implements OnInit, OnDestroy {
           this.initOtpInputHandlers();
 
         } catch (e) {
-          console.error('❌ Failed to parse pendingVerification:', e);
+          console.error('❌ Failed to parse pendingRegistration:', e);
           this.router.navigate(['/register']);
         }
       };
@@ -108,15 +109,42 @@ export class OtpComponent implements OnInit, OnDestroy {
     }
   }
 
+  handleInput(event: Event, index: number): void {
+    const inputs = document.querySelectorAll<HTMLInputElement>('.otp-box');
+    const input = event.target as HTMLInputElement;
+    const value = input.value.replace(/\D/g, '');
+
+    if (value) {
+      input.value = value.charAt(0);
+      if (index < inputs.length - 1) inputs[index + 1].focus();
+    } else {
+      input.value = '';
+    }
+  }
+
+  handleKeyDown(event: KeyboardEvent, index: number): void {
+    const inputs = document.querySelectorAll<HTMLInputElement>('.otp-box');
+    const input = event.target as HTMLInputElement;
+
+    if (event.key === 'Backspace') {
+      input.value = '';
+      if (index > 0) inputs[index - 1].focus();
+    }
+
+    if (!/^\d$/.test(event.key) && event.key !== 'Backspace') {
+      event.preventDefault();
+    }
+  }
+
   verifyOtp(): void {
     const inputs = document.querySelectorAll<HTMLInputElement>('.otp-box');
     const otpCode = Array.from(inputs).map(input => input.value).join('');
 
     console.log('🔐 OTP entered:', otpCode);
 
-    if (otpCode.length !== 6) {
-      console.warn('❌ OTP too short or empty');
+    if (otpCode.length !== 6 || !/^\d{6}$/.test(otpCode)) {
       this.showError = true;
+      this.errorMessage = 'OTP must be 6 digits.';
       return;
     }
 
@@ -126,26 +154,39 @@ export class OtpComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!/^\d{6}$/.test(otpCode)) {
-      this.showError = true;
-      this.errorMessage = 'OTP must be 6 digits only.';
+    const userDataRaw = localStorage.getItem('pendingRegistration');
+    if (!userDataRaw) {
+      console.warn('❌ No registration payload in localStorage.');
+      this.errorMessage = 'Session expired. Please register again.';
+      this.router.navigate(['/register']);
+      return;
+    }
+
+
+    const userData = JSON.parse(userDataRaw);
+    const email = userData?.email;
+    if (!email) {
+      console.error('⚠️ Email missing from stored payload:', userData);
+      this.errorMessage = 'Something went wrong. Please re-register.';
+      this.router.navigate(['/register']);
       return;
     }
 
     this.isLoading = true;
+    const payload = { otp: otpCode, userData };
 
-    this.authService.verifyEmailOtp({
-      email: this.emailToVerify,
-      otp: otpCode
-    }).subscribe({
-      next: () => {
-        console.log('✅ OTP verification successful');
+    console.log('📤 Submitting OTP + userData to /register-after-otp', payload);
+    this.authService.verifyAndRegister(payload).subscribe({
+      next: (res) => {
+        console.log('✅ OTP verified and user created:', res);
         this.verificationSuccess = true;
         this.showError = false;
-        localStorage.removeItem('pendingVerification');
+        localStorage.removeItem('pendingRegistration');
 
         setTimeout(() => {
-          this.router.navigate(['/login']);
+          this.router.navigate(['/login']).then(success => {
+            console.log('➡️ Redirect to /login successful?', success);
+          });
         }, 1000);
       },
       error: (err) => {
@@ -153,11 +194,6 @@ export class OtpComponent implements OnInit, OnDestroy {
         console.error('❌ OTP verification failed:', msg);
 
         this.errorMessage = msg;
-
-        if (msg.includes('expired') || msg.includes('not found')) {
-          this.otpExpired = true;
-        }
-
         this.showError = true;
         this.verificationSuccess = false;
         this.isLoading = false;
@@ -182,6 +218,11 @@ export class OtpComponent implements OnInit, OnDestroy {
     this.authService.resendOtp(this.emailToVerify).subscribe({
       next: () => {
         this.showResendMessage = true;
+        this.otpExpired = false; // ✅ Reset
+        this.showError = false; // ✅ Hide previous error
+        const inputs = document.querySelectorAll<HTMLInputElement>('.otp-box');
+        inputs.forEach(input => input.value = '');
+        inputs[0]?.focus(); // ✅ Focus first box
         setTimeout(() => this.showResendMessage = false, 3000);
       },
       error: () => {
@@ -189,7 +230,6 @@ export class OtpComponent implements OnInit, OnDestroy {
       }
     });
   }
-
 
   private initOtpInputHandlers(): void {
     (window as any).handleInput = (event: Event, index: number) => {

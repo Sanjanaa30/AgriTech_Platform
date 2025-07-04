@@ -3,11 +3,10 @@ const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const Counter = require('../models/Counter');
 const { v4: uuidv4 } = require('uuid');
-const express = require('express');
-const OtpVerification = require('../models/otpVerification');
-const sendOtpEmail = require('../utils/sendOtpEmail');
-const router = express.Router();
+const { createAndSendOtp } = require('./otpController');
+const otpVerification = require('../models/otpVerification');
 
+// Instead of saving to DB, only send OTP for verification
 exports.registerUser = async (req, res) => {
   const {
     firstName, lastName, mobile, aadhaar, email,
@@ -16,7 +15,7 @@ exports.registerUser = async (req, res) => {
     Object.entries(req.body).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
   );
 
-  console.log('📝 Received registration for:', email, mobile);
+  console.log('📝 Received registration for:', email);
 
   if (!firstName || !lastName || !mobile || !aadhaar || !email || !password || !state || !district || !role) {
     console.warn('⛔ Missing required fields');
@@ -51,21 +50,64 @@ exports.registerUser = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
 
+  console.log('🔍 Checking for existing user...');
+
+  const normalizedEmail = email.trim().toLowerCase();
+
+  const existing = await User.findOne({ $or: [{ email: normalizedEmail }, { mobile }, { aadhaar }] });
+  if (existing) {
+    console.warn('🚫 User already exists');
+    return res.status(400).json({ message: 'User already exists with this Email, Aadhaar or Mobile.' });
+  }
+
+  // ✅ Only send OTP here; user creation will happen after OTP verified
   try {
-    console.log('🔍 Checking for existing user...');
-    const existing = await User.findOne({ $or: [{ email }, { aadhaar }, { mobile }] }).session(session);
+    await createAndSendOtp(normalizedEmail);
+    console.log('📨 OTP sent to:', normalizedEmail);
+    return res.status(200).json({ message: 'OTP sent to your email for verification.', email: normalizedEmail });
+  } catch (err) {
+    console.error('❌ Failed to send OTP:', err.message);
+    return res.status(500).json({ message: 'Failed to send OTP. Please try again.' });
+  }
+};
 
+exports.registerAfterOtp = async (req, res) => {
+  const { otp, userData } = req.body;
 
-    if (existing) {
-      console.warn('🚫 Duplicate user found');
-      await session.abortTransaction();
-      return res.status(400).json({ message: 'User already exists with this Email, Aadhaar or Mobile.' });
-    }
+  // ✅ Normalize all string fields from userData
+  const normalizedData = Object.fromEntries(
+    Object.entries(userData).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
+  );
+  const {
+    firstName, lastName, mobile, aadhaar, email,
+    password, state, district, role
+  } = userData;
 
-    console.log('🔐 Hashing password...');
+  if (!otp || !email) {
+    return res.status(400).json({ message: 'OTP and email are required.' });
+  }
+
+  const normalizedEmail = email.trim().toLowerCase();
+  const otpEntry = await otpVerification.findOne({ email: normalizedEmail });
+
+  if (!otpEntry) {
+    return res.status(400).json({ message: 'OTP not found. Please register again.' });
+  }
+
+  if (otpEntry.otp !== otp) {
+    return res.status(400).json({ message: 'Invalid OTP. Please try again.' });
+  }
+
+  if (otpEntry.expiresAt < new Date()) {
+    return res.status(400).json({ message: 'OTP expired. Please re-register.' });
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Increment counter inside session
     const counter = await Counter.findOneAndUpdate(
       { role },
       { $inc: { seq: 1 } },
@@ -74,64 +116,31 @@ exports.registerUser = async (req, res) => {
 
     const customId = `${role.toUpperCase()}_${String(counter.seq).padStart(3, '0')}`;
 
-    console.log('🧾 Creating user with ID:', customId);
-
     const newUser = new User({
       customId,
       firstName,
       lastName,
       mobile,
       aadhaar,
-      email,
+      email: normalizedEmail,
       password: hashedPassword,
       state,
       district,
       roles: [role],
-      isVerified: false,
-      createdAt: new Date()
+      isVerified: true
     });
 
     await newUser.save({ session });
-
-    // 🔐 Generate OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-
-    // ✅ Store OTP in DB with safe logging
-    try {
-      await OtpVerification.create({ email, otp });
-      console.log('📝 OTP stored in database for:', email);
-    } catch (otpErr) {
-      console.error('❌ Failed to store OTP in DB:', otpErr);
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(500).json({ message: 'Failed to store OTP in database.' });
-    }
-
-    // 📧 Send OTP email
-    try {
-      await sendOtpEmail(email, otp);
-      console.log('📨 OTP sent to:', email);
-    } catch (emailErr) {
-      console.error('❌ Failed to send OTP email:', emailErr.message);
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(500).json({ message: 'Failed to send OTP email.' });
-    }
-
+    await otpVerification.deleteMany({ email: normalizedEmail });
     await session.commitTransaction();
     session.endSession();
 
-    console.log('✅ Registration successful for:', email);
-    return res.status(200).json({
-      message: 'Registration successful. OTP sent to your email.',
-      email
-    });
+    return res.status(200).json({ message: 'User registered and verified successfully.' });
 
   } catch (err) {
     await session.abortTransaction();
     session.endSession();
-    console.error(err);
-    console.error('🔥 Internal server error during registration:', err);
-    return res.status(500).json({ message: 'Internal server error' });
+    console.error('❌ Error during registerAfterOtp:', err);
+    return res.status(500).json({ message: 'Internal error. Please try again.' });
   }
 };
