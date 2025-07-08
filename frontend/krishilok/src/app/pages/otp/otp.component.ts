@@ -204,6 +204,10 @@ export class OtpComponent implements OnInit, OnDestroy {
         localStorage.removeItem('registrationInProgress');
         sessionStorage.removeItem('registrationInProgress');
 
+        // ❗ Remove any token just in case
+        localStorage.removeItem('token');
+        sessionStorage.removeItem('token');
+
         setTimeout(() => {
           this.router.navigate(['/login']).then(success => {
             console.log('➡️ Redirect to /login successful?', success);

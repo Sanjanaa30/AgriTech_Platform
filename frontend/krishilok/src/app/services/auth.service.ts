@@ -33,5 +33,21 @@ export class AuthService {
   logLoginAttempt(data: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/login-attempt`, data);
   }
+
+  getToken(): string | null {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('token');
+    }
+    return null;
+  }
+
+  isTokenValid(token: string): boolean {
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload && payload.exp && Date.now() < payload.exp * 1000;
+    } catch (e) {
+      return false;
+    }
+  }
 }
 
