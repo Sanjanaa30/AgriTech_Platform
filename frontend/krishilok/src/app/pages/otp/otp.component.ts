@@ -82,9 +82,14 @@ export class OtpComponent implements OnInit, OnDestroy {
             this.otpExpired = true;
           }, 5 * 60 * 1000);
 
-          window.addEventListener('beforeunload', this.blockUnload);
-          history.pushState(null, '', location.href);
-          window.addEventListener('popstate', this.blockBackNavigation);
+          if (isPlatformBrowser(this.platformId)) {
+            if (window.history.state === null) {
+              history.pushState({ page: 'otp' }, '', location.href);
+            }
+
+            window.addEventListener('beforeunload', this.blockUnload);
+            window.addEventListener('popstate', this.blockBackNavigation);
+          }
 
           this.initOtpInputHandlers();
 
@@ -177,11 +182,27 @@ export class OtpComponent implements OnInit, OnDestroy {
 
     console.log('📤 Submitting OTP + userData to /register-after-otp', payload);
     this.authService.verifyAndRegister(payload).subscribe({
+      // next: (res) => {
+      //   console.log('✅ OTP verified and user created:', res);
+      //   this.verificationSuccess = true;
+      //   this.showError = false;
+      //   localStorage.removeItem('pendingRegistration');
+
+      //   setTimeout(() => {
+      //     this.router.navigate(['/login']).then(success => {
+      //       console.log('➡️ Redirect to /login successful?', success);
+      //     });
+      //   }, 1000);
+      // },
       next: (res) => {
         console.log('✅ OTP verified and user created:', res);
         this.verificationSuccess = true;
         this.showError = false;
+
+        // 🧹 Clean up stored flags and payload
         localStorage.removeItem('pendingRegistration');
+        localStorage.removeItem('registrationInProgress');
+        sessionStorage.removeItem('registrationInProgress');
 
         setTimeout(() => {
           this.router.navigate(['/login']).then(success => {
@@ -189,6 +210,7 @@ export class OtpComponent implements OnInit, OnDestroy {
           });
         }, 1000);
       },
+
       error: (err) => {
         const msg = err?.error?.message || 'Something went wrong. Please try again.';
         console.error('❌ OTP verification failed:', msg);
@@ -261,13 +283,48 @@ export class OtpComponent implements OnInit, OnDestroy {
     };
   }
 
+  private unloadBlocked = false;
+
   blockUnload = (event: BeforeUnloadEvent) => {
-    event.preventDefault();
-    event.returnValue = '';
+    if (!this.unloadBlocked) {
+      this.unloadBlocked = true;
+
+      event.preventDefault();
+      event.returnValue = '';
+
+      // Reset after 1 second to allow another block
+      setTimeout(() => {
+        this.unloadBlocked = false;
+      }, 1000);
+    }
   };
 
-  blockBackNavigation = () => {
-    alert('⚠️ Please complete verification before leaving this page.');
-    history.pushState(null, '', location.href);
+  private backBlocked = false;
+
+  blockBackNavigation = (event?: PopStateEvent) => {
+    if (!this.backBlocked) {
+      this.backBlocked = true;
+
+      const confirmLeave = window.confirm(
+        '⚠️ Your verification is in progress. Are you sure you want to leave this page?'
+      );
+
+      if (!confirmLeave) {
+        // Stay on page
+        if (window.history.state === null) {
+          history.pushState({ page: 'otp' }, '', location.href);
+        }
+      } else {
+        // Allow navigation (but disable further prompts)
+        window.removeEventListener('beforeunload', this.blockUnload);
+        window.removeEventListener('popstate', this.blockBackNavigation);
+      }
+
+      setTimeout(() => {
+        this.backBlocked = false;
+      }, 1000);
+    }
   };
+
+
 }

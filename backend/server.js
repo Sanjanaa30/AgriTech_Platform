@@ -5,6 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 const registerRoutes = require('./routes/registerRoutes');
 const otpRoutes = require('./routes/otpRoutes');
+const loginRoutes = require('./routes/loginRoutes');
 
 const app = express();
 app.use(cors({
@@ -29,6 +30,8 @@ app.get('/', (req, res) => {
 // Register routes
 app.use('/api/auth', registerRoutes);
 app.use('/api/auth', otpRoutes);
+app.use('/api/auth', loginRoutes);
+
 
 // Start server
 const PORT = process.env.PORT || 5000;

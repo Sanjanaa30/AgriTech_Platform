@@ -1,12 +1,10 @@
-import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import stateDistrictData from '../../../assets/states-districts.json';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { isPlatformBrowser } from '@angular/common';
 import { Inject, PLATFORM_ID } from '@angular/core';
-
 
 @Component({
   selector: 'app-register',
@@ -15,7 +13,6 @@ import { Inject, PLATFORM_ID } from '@angular/core';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
-
 export class RegisterComponent implements OnInit, OnDestroy {
   showPassword = false;
   passwordFocused = false;
@@ -25,7 +22,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   isSubmitting: boolean = false;
   remainingRules: string[] = [];
   submissionInProgress = false;
-  hasSubmitted: boolean = false; // ⛔ for blocking refresh/back during submit
+  hasSubmitted: boolean = false;
+  private unloadBlocked = false;
+  private backBlocked = false;
 
   formData = {
     firstName: '',
@@ -42,10 +41,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   states: string[] = [];
   districts: string[] = [];
   aadharRaw: string = '';
-
   errorMessage: string = '';
   successMessage: string = '';
-
 
   constructor(
     private authService: AuthService,
@@ -57,12 +54,18 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.states = Object.keys(stateDistrictData);
 
     if (isPlatformBrowser(this.platformId)) {
-      // ✅ Safe to access window and history now
-      window.addEventListener('beforeunload', this.confirmUnload);
-      history.pushState(null, '', location.href);
-      window.addEventListener('popstate', this.confirmBack);
+      const inProgress = localStorage.getItem('registrationInProgress') === 'true';
+
+      if (inProgress) {
+        if (window.history.state === null) {
+          history.pushState({ page: 'register' }, '', location.href);
+        }
+        window.addEventListener('beforeunload', this.confirmUnload);
+        window.addEventListener('popstate', this.confirmBack);
+      }
     }
   }
+
 
   ngOnDestroy(): void {
     if (isPlatformBrowser(this.platformId)) {
@@ -71,19 +74,42 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
-  confirmUnload = (e: BeforeUnloadEvent) => {
-    if (this.hasSubmitted && !this.successMessage) {
-      e.preventDefault();
-      e.returnValue = '⚠️ Your registration is in progress. Are you sure you want to leave this page?';
+
+  confirmUnload = (event: BeforeUnloadEvent) => {
+    if (!this.unloadBlocked && this.hasSubmitted && !this.successMessage) {
+      this.unloadBlocked = true;
+      event.preventDefault();
+      event.returnValue = '';
+      setTimeout(() => {
+        this.unloadBlocked = false;
+      }, 1000);
     }
-  }
+  };
+
 
   confirmBack = () => {
-    if (this.hasSubmitted && !this.successMessage) {
-      alert('⚠️ Your registration is in progress. Please wait for OTP or complete the process.');
-      history.pushState(null, '', location.href);
+    if (!this.backBlocked && this.hasSubmitted && !this.successMessage) {
+      this.backBlocked = true;
+      const confirmLeave = window.confirm(
+        '⚠️ Your registration is in progress. Are you sure you want to leave this page?'
+      );
+
+      if (!confirmLeave) {
+        if (window.history.state === null) {
+          history.pushState({ page: 'register' }, '', location.href);
+        }
+      } else {
+        window.removeEventListener('beforeunload', this.confirmUnload);
+        window.removeEventListener('popstate', this.confirmBack);
+      }
+
+      setTimeout(() => {
+        this.backBlocked = false;
+      }, 1000);
     }
-  }
+  };
+
+
   onStateChange(state: string) {
     this.formData.district = '';
     this.districts = (stateDistrictData as any)[state] || [];
@@ -115,6 +141,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   isValidAadhar(): boolean {
     return /^\d{12}$/.test(this.aadharRaw);
   }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
   }
@@ -175,7 +202,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
       return false;
     }
 
-
     if (!mobileRegex.test(this.formData.mobile)) {
       this.errorMessage = 'Mobile number must be exactly 10 digits.';
       return false;
@@ -203,7 +229,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.hasSubmitted = true;
     this.validatePassword();
 
-    if (this.passwordError || !this.validateForm) {
+    if (this.passwordError || !this.validateForm()) {
       this.errorMessage = 'Please fix the password rules before submitting.';
       this.isSubmitting = false;
       this.submissionInProgress = false;
@@ -220,9 +246,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.authService.registerUser(payload).subscribe({
       next: (res) => {
         this.successMessage = res.message || 'OTP sent successfully!';
-
-        // ✅ Store full payload for final submission after OTP verification
         localStorage.setItem('pendingRegistration', JSON.stringify(payload));
+        localStorage.setItem('registrationInProgress', 'true');
+
+        if (isPlatformBrowser(this.platformId)) {
+          if (window.history.state === null) {
+            history.pushState({ page: 'register' }, '', location.href);
+          }
+          window.addEventListener('beforeunload', this.confirmUnload);
+          window.addEventListener('popstate', this.confirmBack);
+        }
 
         setTimeout(() => {
           this.router.navigate(['/verify-otp'], { queryParams: { fromRegister: true } }).then(success => {
@@ -234,11 +267,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
       },
       error: (err) => {
         console.error('❌ Registration error:', err);
-        if (err.status === 409 || err.error?.message?.includes('already exists')) {
-          this.errorMessage = 'A user already exists with this Email, Aadhaar, or Mobile number.';
-        } else {
-          this.errorMessage = err.error?.message || 'Something went wrong!';
-        }
+        this.errorMessage = err?.error?.message || 'Something went wrong!';
         this.isSubmitting = false;
         this.hasSubmitted = false;
       }

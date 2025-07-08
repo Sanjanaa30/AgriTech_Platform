@@ -6,22 +6,19 @@ function generateOtp() {
 }
 
 async function createAndSendOtp(email) {
-  const otp = generateOtp();
   const normalizedEmail = email.trim().toLowerCase();
-  const expiresAtUtc = new Date(Date.now() + 5 * 60 * 1000); // 5 minutes in UTC
+  const otp = generateOtp();
+  const expiresAtUtc = new Date(Date.now() + 5 * 60 * 1000); // 5 min expiry
 
   await otpVerification.deleteMany({ email: normalizedEmail });
 
-  await otpVerification.create({
-    email: normalizedEmail,
-    otp,
-    expiresAt: expiresAtUtc
-  });
+  await otpVerification.create({ email: normalizedEmail, otp, expiresAt: expiresAtUtc });
 
   await sendOtpEmail(normalizedEmail, otp);
 
-  // Optional (for development only):
-  console.log(`🔐 OTP for ${normalizedEmail}: ${otp}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🔐 OTP for ${normalizedEmail}: ${otp}`);
+  }
 
   return otp;
 }
@@ -29,23 +26,22 @@ async function createAndSendOtp(email) {
 async function resendOtp(email) {
   if (!email) throw new Error('Email is required for resending OTP');
 
-  const otp = generateOtp();
   const normalizedEmail = email.trim().toLowerCase();
-  console.log(`🟡 Resend OTP triggered for: ${normalizedEmail}`);
+  const otp = generateOtp();
 
   await otpVerification.deleteMany({ email: normalizedEmail });
 
-  const newEntry = await otpVerification.create({
+  await otpVerification.create({
     email: normalizedEmail,
     otp,
     expiresAt: new Date(Date.now() + 5 * 60 * 1000)
   });
 
-  console.log(`🟢 New OTP entry stored:`, newEntry);
-
   await sendOtpEmail(normalizedEmail, otp);
 
-  console.log(`📤 OTP email sent to: ${normalizedEmail} | OTP: ${otp}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`📤 Resent OTP to: ${normalizedEmail} | OTP: ${otp}`);
+  }
 
   return otp;
 }

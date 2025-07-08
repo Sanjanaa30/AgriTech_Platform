@@ -40,11 +40,17 @@
           <input [(ngModel)]="otp" name="otp" type="text" placeholder="Verify OTP"
             class="w-full px-4 py-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-green-500 outline-none" />
 
-          <button type="button" (click)="getOtp()"
+          <!-- OTP Button Section -->
+          <button *ngIf="!otpSent" type="button" (click)="sendOtp()"
             class="w-full bg-green-700 hover:bg-green-800 text-white font-medium py-3 px-4 rounded-md transition">
             Get OTP
           </button>
 
+          <button *ngIf="otpSent" type="button" (click)="verifyOtp()" [disabled]="isLoading"
+            class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-3 px-4 rounded-md transition opacity-90"
+            [ngClass]="{ 'opacity-50 cursor-not-allowed': isLoading }">
+            {{ isLoading ? 'Verifying...' : 'Verify OTP' }}
+          </button>
           <!-- Divider -->
           <div class="text-center my-6">
             <span class="text-2xl font-bold text-gray-400">OR</span>

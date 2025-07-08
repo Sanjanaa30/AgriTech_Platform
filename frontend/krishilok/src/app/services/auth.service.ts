@@ -21,5 +21,17 @@ export class AuthService {
   resendOtp(email: string): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/resend-otp`, { email });
   }
+
+  loginWithPassword(identifier: string, password: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login-password`, { identifier, password });
+  }
+
+  loginWithOtp(identifier: string, otp: string): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login-otp`, { identifier, otp });
+  }
+
+  logLoginAttempt(data: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}/login-attempt`, data);
+  }
 }
 
