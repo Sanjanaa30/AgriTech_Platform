@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const Counter = require('../models/Counter');
-const { v4: uuidv4 } = require('uuid');
 const { createAndSendOtp } = require('./otpController');
 const otpVerification = require('../models/otpVerification');
 
@@ -18,7 +17,6 @@ exports.registerUser = async (req, res) => {
   console.log('📝 Received registration for:', email);
 
   if (!firstName || !lastName || !mobile || !aadhaar || !email || !password || !state || !district || !role) {
-    console.warn('⛔ Missing required fields');
     return res.status(400).json({ message: 'All required fields must be filled.' });
   }
 
@@ -27,40 +25,16 @@ exports.registerUser = async (req, res) => {
   const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$/;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  if (!emailRegex.test(email)) {
-    console.warn('⛔ Invalid email:', email);
-    return res.status(400).json({ message: 'Please enter a valid email address.' });
-  }
-
-  if (!mobileRegex.test(mobile)) {
-    console.warn('⛔ Invalid mobile:', mobile);
-    return res.status(400).json({ message: 'Mobile must be +91 followed by 10 digits.' });
-  }
-
-  if (!aadhaarRegex.test(aadhaar)) {
-    console.warn('⛔ Invalid Aadhaar:', aadhaar);
-    return res.status(400).json({ message: 'Aadhaar must be exactly 12 digits.' });
-  }
-
-  if (!passwordRegex.test(password)) {
-    console.warn('⛔ Weak password.');
-    return res.status(400).json({ message: 'Password must meet complexity requirements.' });
-  }
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
-
-  console.log('🔍 Checking for existing user...');
+  if (!emailRegex.test(email)) return res.status(400).json({ message: 'Please enter a valid email address.' });
+  if (!mobileRegex.test(mobile)) return res.status(400).json({ message: 'Mobile must be +91 followed by 10 digits.' });
+  if (!aadhaarRegex.test(aadhaar)) return res.status(400).json({ message: 'Aadhaar must be exactly 12 digits.' });
+  if (!passwordRegex.test(password)) return res.status(400).json({ message: 'Password must meet complexity requirements.' });
 
   const normalizedEmail = email.trim().toLowerCase();
 
   const existing = await User.findOne({ $or: [{ email: normalizedEmail }, { mobile }, { aadhaar }] });
-  if (existing) {
-    console.warn('🚫 User already exists');
-    return res.status(400).json({ message: 'User already exists with this Email, Aadhaar or Mobile.' });
-  }
+  if (existing) return res.status(400).json({ message: 'User already exists with this Email, Aadhaar or Mobile.' });
 
-  // ✅ Only send OTP here; user creation will happen after OTP verified
   try {
     await createAndSendOtp(normalizedEmail);
     console.log('📨 OTP sent to:', normalizedEmail);
@@ -71,17 +45,17 @@ exports.registerUser = async (req, res) => {
   }
 };
 
+// ✅ Step 2: Create user after OTP verification
 exports.registerAfterOtp = async (req, res) => {
   const { otp, userData } = req.body;
 
-  // ✅ Normalize all string fields from userData
   const normalizedData = Object.fromEntries(
     Object.entries(userData).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
   );
   const {
     firstName, lastName, mobile, aadhaar, email,
     password, state, district, role
-  } = userData;
+  } = normalizedData;
 
   if (!otp || !email) {
     return res.status(400).json({ message: 'OTP and email are required.' });
@@ -90,17 +64,9 @@ exports.registerAfterOtp = async (req, res) => {
   const normalizedEmail = email.trim().toLowerCase();
   const otpEntry = await otpVerification.findOne({ email: normalizedEmail });
 
-  if (!otpEntry) {
-    return res.status(400).json({ message: 'OTP not found. Please register again.' });
-  }
-
-  if (otpEntry.otp !== otp) {
-    return res.status(400).json({ message: 'Invalid OTP. Please try again.' });
-  }
-
-  if (otpEntry.expiresAt < new Date()) {
-    return res.status(400).json({ message: 'OTP expired. Please re-register.' });
-  }
+  if (!otpEntry) return res.status(400).json({ message: 'OTP not found. Please register again.' });
+  if (otpEntry.otp !== otp) return res.status(400).json({ message: 'Invalid OTP. Please try again.' });
+  if (otpEntry.expiresAt < new Date()) return res.status(400).json({ message: 'OTP expired. Please re-register.' });
 
   const session = await mongoose.startSession();
   session.startTransaction();
@@ -127,7 +93,7 @@ exports.registerAfterOtp = async (req, res) => {
       state,
       district,
       roles: [role],
-      isVerified: true
+      isVerified: true // You can remove this if not needed
     });
 
     await newUser.save({ session });

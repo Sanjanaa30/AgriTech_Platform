@@ -52,6 +52,10 @@ const userSchema = new mongoose.Schema({
   roles: {
     type: [String],
     required: true
+  },
+  isVerified: {
+    type: Boolean,
+    default: false   // can be true if needed in OTP flow
   }
 }, {
   timestamps: true // ✅ adds createdAt and updatedAt automatically

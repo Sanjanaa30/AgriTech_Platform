@@ -13,6 +13,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.css']
 })
+
 export class RegisterComponent implements OnInit, OnDestroy {
   showPassword = false;
   passwordFocused = false;
@@ -74,15 +75,12 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
-
   confirmUnload = (event: BeforeUnloadEvent) => {
     if (!this.unloadBlocked && this.hasSubmitted && !this.successMessage) {
       this.unloadBlocked = true;
       event.preventDefault();
       event.returnValue = '';
-      setTimeout(() => {
-        this.unloadBlocked = false;
-      }, 1000);
+      setTimeout(() => (this.unloadBlocked = false), 1000);
     }
   };
 
@@ -103,9 +101,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         window.removeEventListener('popstate', this.confirmBack);
       }
 
-      setTimeout(() => {
-        this.backBlocked = false;
-      }, 1000);
+      setTimeout(() => (this.backBlocked = false), 1000);
     }
   };
 
@@ -243,11 +239,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
       email: this.formData.email.trim()
     };
 
-    this.authService.registerUser(payload).subscribe({
+this.authService.registerUser(payload).subscribe({
       next: (res) => {
         this.successMessage = res.message || 'OTP sent successfully!';
-        localStorage.setItem('pendingRegistration', JSON.stringify(payload));
-        localStorage.setItem('registrationInProgress', 'true');
+        sessionStorage.setItem('pendingRegistration', JSON.stringify(payload));  // ✅ Now only in sessionStorage
+        localStorage.setItem('registrationInProgress', 'true'); // ✅ Only used for guarding navigation
 
         if (isPlatformBrowser(this.platformId)) {
           if (window.history.state === null) {

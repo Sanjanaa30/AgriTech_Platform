@@ -19,11 +19,11 @@ export class LoginComponent implements OnInit {
   identifier: string = '';
   otp: string = '';
   password: string = '';
-  rememberMe: boolean = false;
   errorMessage: string = '';
   successMessage: string = '';
   otpSent: boolean = false;
   isLoading: boolean = false;
+  rememberMe: boolean = false;
 
   constructor(
     private translate: TranslateService,
@@ -34,12 +34,18 @@ export class LoginComponent implements OnInit {
     this.translate.setDefaultLang('en');
   }
 
+
   ngOnInit(): void {
-    const token = this.authService.getToken();
-    if (token && this.authService.isTokenValid(token)) {
-      this.successMessage = 'Already logged in. Redirecting...';
-      setTimeout(() => this.router.navigate(['/dashboard']), 500);
-    }
+    // Optional: Check if user is already authenticated via cookie
+    this.authService.checkAuth().subscribe({
+      next: (res) => {
+        this.successMessage = 'Already logged in. Redirecting...';
+        setTimeout(() => this.router.navigate(['/dashboard']), 500);
+      },
+      error: () => {
+        // Not logged in, ignore
+      }
+    });
   }
 
   sendOtp(): void {
@@ -89,8 +95,8 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithOtp(this.identifier, this.otp).subscribe({
       next: (res) => {
         this.trackLoginAttempt(true, 'otp');
-        this.storeToken(res.token);
         this.successMessage = 'OTP verified! Redirecting...';
+
         const role = res.role?.[0];
         setTimeout(() => {
           if (role === 'admin') {
@@ -98,7 +104,7 @@ export class LoginComponent implements OnInit {
           } else if (role === 'buyer') {
             this.router.navigate(['/buyer-dashboard']);
           } else {
-            this.router.navigate(['/dashboard']); // farmer
+            this.router.navigate(['/dashboard']);
           }
           this.isLoading = false;
         }, 1000);
@@ -110,7 +116,6 @@ export class LoginComponent implements OnInit {
       }
     });
   }
-
   loginWithPassword(): void {
     this.clearMessages();
 
@@ -124,7 +129,7 @@ export class LoginComponent implements OnInit {
     this.authService.loginWithPassword(this.identifier, this.password).subscribe({
       next: (res) => {
         this.trackLoginAttempt(true, 'password');
-        this.storeToken(res.token);
+        // this.storeToken(res.token);
         this.successMessage = 'Login successful!';
 
         const role = res.role?.[0]; // assuming role is an array
@@ -143,15 +148,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  storeToken(token: string): void {
-    if (typeof window !== 'undefined') {
-      if (this.rememberMe) {
-        localStorage.setItem('token', token);
-      } else {
-        sessionStorage.setItem('token', token);
-      }
-    }
-  }
+  // storeToken(token: string): void {
+  //   if (typeof window !== 'undefined') {
+  //     if (this.rememberMe) {
+  //       localStorage.setItem('token', token);
+  //     } else {
+  //       sessionStorage.setItem('token', token);
+  //     }
+  //   }
+  // }
 
   clearMessages(): void {
     this.errorMessage = '';

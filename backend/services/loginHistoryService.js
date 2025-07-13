@@ -31,7 +31,7 @@ async function logLoginAttempt(req, success, user = null) {
       console.log(`📌 Login history recorded for ${identifier} [${success ? '✅' : '❌'}]`);
     }
   } catch (err) {
-    console.error('❌ Failed to log login attempt:', err.message);
+    console.error(`❌ Failed to log login attempt for ${identifier} from IP ${ip}:`, err.message);
   }
 }
 

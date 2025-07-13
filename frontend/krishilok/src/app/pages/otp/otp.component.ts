@@ -45,9 +45,9 @@ export class OtpComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (isPlatformBrowser(this.platformId)) {
       const tryLoadData = () => {
-        const dataRaw = localStorage.getItem('pendingRegistration');
+        const dataRaw = sessionStorage.getItem('pendingRegistration');
         if (!dataRaw) {
-          console.warn('🔁 Retrying to load localStorage...');
+          console.warn('🔁 Retrying to load sessionStorage...');
           setTimeout(tryLoadData, 100);  // ✅ no return
           return; // ✅ early exit with no value
         }
@@ -66,7 +66,7 @@ export class OtpComponent implements OnInit, OnDestroy {
           this.emailToVerify = email.trim().toLowerCase();
           this.maskedEmail = this.emailToVerify;
 
-          console.log('📧 Email loaded from localStorage:', this.emailToVerify);
+          console.log('📧 Email loaded from sessionStorage:', this.emailToVerify);
 
           this.route.queryParams.subscribe(params => {
             if (params['fromRegister']) {
@@ -159,9 +159,9 @@ export class OtpComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const userDataRaw = localStorage.getItem('pendingRegistration');
+    const userDataRaw = sessionStorage.getItem('pendingRegistration');
     if (!userDataRaw) {
-      console.warn('❌ No registration payload in localStorage.');
+      console.warn('❌ No registration payload in sessionStorage.');
       this.errorMessage = 'Session expired. Please register again.';
       this.router.navigate(['/register']);
       return;
@@ -179,6 +179,7 @@ export class OtpComponent implements OnInit, OnDestroy {
 
     this.isLoading = true;
     const payload = { otp: otpCode, userData };
+    sessionStorage.removeItem('pendingRegistration');
 
     console.log('📤 Submitting OTP + userData to /register-after-otp', payload);
     this.authService.verifyAndRegister(payload).subscribe({
@@ -200,13 +201,13 @@ export class OtpComponent implements OnInit, OnDestroy {
         this.showError = false;
 
         // 🧹 Clean up stored flags and payload
-        localStorage.removeItem('pendingRegistration');
-        localStorage.removeItem('registrationInProgress');
+        sessionStorage.removeItem('pendingRegistration');
+        sessionStorage.removeItem('registrationInProgress');
         sessionStorage.removeItem('registrationInProgress');
 
         // ❗ Remove any token just in case
-        localStorage.removeItem('token');
-        sessionStorage.removeItem('token');
+        // localStorage.removeItem('token');
+        // sessionStorage.removeItem('token');
 
         setTimeout(() => {
           this.router.navigate(['/login']).then(success => {

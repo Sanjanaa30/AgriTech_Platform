@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 const loginHistorySchema = new mongoose.Schema({
-  identifier: { type: String, required: true },
-  userId: { type: String, ref: 'User' }, // ✅ fix: match UUID string _id
+  identifier: { type: String, required: true, index: true },  // 👈 add index
+  userId: { type: String, ref: 'User', index: true },         // 👈 add index
   ip: { type: String, required: true },
   device: { type: Object, required: true },
   location: { type: String },

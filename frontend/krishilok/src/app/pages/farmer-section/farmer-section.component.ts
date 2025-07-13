@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute } from '@angular/router'; // ✅ Import this
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-farmer-section',
@@ -9,12 +9,11 @@ import { ActivatedRoute } from '@angular/router'; // ✅ Import this
   templateUrl: './farmer-section.component.html'
 })
 export class FarmerSectionComponent {
-  section: string = '';
 
+  section: string = '';
+  
   constructor(private route: ActivatedRoute) {
-    this.route.params.subscribe(params => {
-      this.section = params['section'];
-    });
+    this.section = this.route.snapshot.paramMap.get('section') || '';
   }
 
   crops = [
