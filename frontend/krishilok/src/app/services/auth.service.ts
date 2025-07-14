@@ -103,21 +103,20 @@ export class AuthService {
       error: (err) => console.error('❌ Logout failed:', err),
       complete: () => {
         this.authenticated = false;
-
-        // ✅ CLEAR ALL RESIDUAL AUTH STATE
         sessionStorage.clear();
         localStorage.clear();
 
-        // ✅ Replace login route to prevent back navigation
-        this.router.navigateByUrl('/login', { replaceUrl: true }).then(() => {
-          if (isPlatformBrowser(this.platformId)) {
-            window.location.reload(); // ✅ hard reload ensures no token leak
-          }
-          this.isLoggingOut = false;
-        });
+        if (isPlatformBrowser(this.platformId)) {
+          // 🚫 Prevent back navigation by wiping history entry
+          window.location.replace('/login');
+        }
+
+        this.isLoggingOut = false;
       },
     });
   }
+
+
 
 
 

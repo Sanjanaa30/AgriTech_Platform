@@ -30,9 +30,25 @@ export class FarmerDashboardComponent implements OnInit, CanComponentDeactivate 
   ];
 
   constructor(private router: Router, private authService: AuthService) { }
+  // logout(): void {
+  //   const confirmed = confirm('Are you sure you want to logout?');
+  //   if (!confirmed) {
+  //     console.log('❌ Logout cancelled by user.');
+  //     return;
+  //   }
+
+  //   this.authService.logout();
+  // }
   logout(): void {
-    this.authService.logout();
+    const confirmed = confirm('Are you sure you want to logout?');
+    if (confirmed) {
+      this.authService.logout(); // ✅ Goes to login
+    } else {
+      console.log('❌ Logout cancelled');
+    }
   }
+
+
 
   ngOnInit(): void {
     this.authService.checkAuth().subscribe({
@@ -71,11 +87,11 @@ export class FarmerDashboardComponent implements OnInit, CanComponentDeactivate 
   }
 
   canDeactivate(): boolean {
-    const confirmed = window.confirm('Are you sure you want to go back to the login page?');
-    if (confirmed) {
-      // ✅ Just remove username info if needed
-      localStorage.removeItem('user'); // optional now
+    const confirmExit = window.confirm('Are you sure you want to go back to the login page?');
+    if (confirmExit) {
+      localStorage.clear(); // Optional
+      sessionStorage.clear(); // Optional
     }
-    return confirmed;
+    return confirmExit;
   }
 }
