@@ -4,12 +4,14 @@ const jwt = require('jsonwebtoken');
 const otpVerification = require('../models/otpVerification');
 const { logLoginAttempt } = require('../services/loginHistoryService');
 
-// Generate tokens
+// Updated: Generate Refresh Token including role
+const generateRefreshToken = user =>
+  jwt.sign({ userId: user._id, role: user.roles }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
+
+// Generate Access Token (already correct)
 const generateAccessToken = user =>
   jwt.sign({ userId: user._id, role: user.roles }, process.env.JWT_SECRET, { expiresIn: '15m' });
 
-const generateRefreshToken = user =>
-  jwt.sign({ userId: user._id }, process.env.JWT_REFRESH_SECRET, { expiresIn: '7d' });
 
 // Determine cookie flags based on environment
 const cookieOptions = {
@@ -45,13 +47,17 @@ exports.loginWithPassword = async (req, res) => {
     await logLoginAttempt(req, true, user);
 
     res.cookie('accessToken', accessToken, {
-      ...cookieOptions,
-      maxAge: 15 * 60 * 1000
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',     // false in dev
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Lax is safe for localhost
+      maxAge: 15 * 60 * 1000 // ✅ 15 minutes
     });
 
     res.cookie('refreshToken', refreshToken, {
-      ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',     // false in dev
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Lax is safe for localhost
+      maxAge: 7 * 24 * 60 * 60 * 1000                     // 7 days
     });
 
     return res.json({ userId: user._id, role: user.roles, message: 'Login successful' });
@@ -97,13 +103,17 @@ exports.loginWithOtp = async (req, res) => {
     await logLoginAttempt(req, true, user);
 
     res.cookie('accessToken', accessToken, {
-      ...cookieOptions,
-      maxAge: 15 * 60 * 1000
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',     // false in dev
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Lax is safe for localhost
+      maxAge: 15 * 60 * 1000 // ✅ 15 minutes
     });
 
     res.cookie('refreshToken', refreshToken, {
-      ...cookieOptions,
-      maxAge: 7 * 24 * 60 * 60 * 1000
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',     // false in dev
+      sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax', // Lax is safe for localhost
+      maxAge: 7 * 24 * 60 * 60 * 1000                     // 7 days
     });
 
     return res.json({ userId: user._id, role: user.roles, message: 'Login successful' });
@@ -116,6 +126,9 @@ exports.loginWithOtp = async (req, res) => {
 // -------------------- REFRESH TOKEN --------------------
 exports.refreshToken = (req, res) => {
   const token = req.cookies?.refreshToken;
+
+  console.log('🔁 Attempting refresh with token:', token); // 🔍 Debug log
+
   if (!token) {
     console.warn('❌ No refresh token cookie found');
     return res.status(401).json({ message: 'No refresh token' });
@@ -125,7 +138,11 @@ exports.refreshToken = (req, res) => {
     const payload = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
     console.log('🔁 Refresh token valid for user:', payload.userId);
 
-    const accessToken = jwt.sign({ userId: payload.userId }, process.env.JWT_SECRET, { expiresIn: '15m' });
+    const accessToken = jwt.sign(
+      { userId: payload.userId, role: payload.role }, // ✅ Include role here
+      process.env.JWT_SECRET,
+      { expiresIn: '15m' }
+    );
 
     res.cookie('accessToken', accessToken, {
       ...cookieOptions,
@@ -144,6 +161,7 @@ exports.logout = (req, res) => {
   console.log('👋 Logging out user');
   res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
+  console.log('✅ Cookies cleared. Logout complete.');
   return res.status(200).json({ message: 'Logged out successfully' });
 };
 

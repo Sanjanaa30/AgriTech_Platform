@@ -1,32 +1,36 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, tap } from 'rxjs';
+import { Router } from '@angular/router';
 
 interface AuthCheckResponse {
   message: string;
   user: {
     userId: string;
     username: string;
-    // add other fields you expect, like email, role etc.
+    // add other fields like email, role, etc.
   };
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private baseUrl = 'http://localhost:5000/api/auth';
-  private authenticated = false; // session-based flag
+  private authenticated = false;
+  private isLoggingOut = false;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private router: Router) {}
 
   registerUser(userData: any): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.baseUrl}/pre-register`, userData, { withCredentials: true });
   }
 
   verifyAndRegister(payload: { userData: any, otp: string }): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${this.baseUrl}/register-after-otp`, payload, { withCredentials: true });
+    return this.http.post<{ message: string }>(`${this.baseUrl}/register-after-otp`, payload, { withCredentials: true }).pipe(
+      tap(() => {
+        this.authenticated = true;
+        console.log('✅ Registration completed and authenticated.');
+      })
+    );
   }
 
   resendOtp(email: string): Observable<{ message: string }> {
@@ -56,39 +60,58 @@ export class AuthService {
   }
 
   checkAuth(): Observable<AuthCheckResponse> {
-    return this.http.get<AuthCheckResponse>(`${this.baseUrl}/check-auth`, { withCredentials: true }).pipe(
-      tap((res) => {
-        this.authenticated = true;
-        if (res.user) {
-          localStorage.setItem('user', JSON.stringify(res.user)); // ⬅️ No TypeScript error now
-        }
-      })
-    );
+    return this.http.get<AuthCheckResponse>(`${this.baseUrl}/check-auth`, { withCredentials: true });
   }
 
-
   refreshToken(): Observable<any> {
-    return this.http.post('/api/auth/refresh-token', {}, { withCredentials: true }).pipe(
+    return this.http.post(`${this.baseUrl}/refresh-token`, {}, { withCredentials: true }).pipe(
       tap(() => {
+        this.authenticated = true; // ✅ Mark authenticated after successful refresh
         console.log('🔁 Refresh token called from auth.service');
       })
     );
   }
 
   logout(): void {
-    this.http.post('/api/auth/logout', {}, { withCredentials: true }).subscribe({
+    if (this.isLoggingOut) return;
+
+    this.isLoggingOut = true;
+
+    this.http.post(`${this.baseUrl}/logout`, {}, { withCredentials: true }).subscribe({
       next: () => {
-        this.authenticated = false;
-        console.log('👋 Logged out successfully.');
+        console.log("👋 Logged out successfully.");
       },
-      error: () => {
-        console.error('⚠️ Logout failed on server.');
+      error: (err) => {
+        console.error("❌ Logout failed:", err);
+      },
+      complete: () => {
+        this.authenticated = false;
+        this.router.navigate(['/login']).then(() => {
+          this.isLoggingOut = false;
+        });
       }
     });
   }
 
+  setAuthenticated(status: boolean): void {
+    this.authenticated = status;
+  }
+
   isAuthenticated(): boolean {
-    console.log(`🔍 isAuthenticated(): ${this.authenticated}`);
     return this.authenticated;
+  }
+
+  // ✅ NEW: Restore session on app reload
+  restoreAuthState(): void {
+    this.checkAuth().subscribe({
+      next: (res) => {
+        this.authenticated = true;
+        console.log('✅ Session restored. User:', res.user?.userId);
+      },
+      error: () => {
+        this.authenticated = false;
+        console.warn('🔒 Not authenticated on restore.');
+      }
+    });
   }
 }

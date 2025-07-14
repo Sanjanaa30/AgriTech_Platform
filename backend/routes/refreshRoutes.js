@@ -1,20 +1,30 @@
-// routes/refreshRoutes.js (already used in your server.js)
+// backend/routes/refreshRoutes.js
+
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
-const verifyRefreshToken = require('../middleware/verifyRefreshToken'); // you’ll write this
+const verifyRefreshToken = require('../middleware/verifyRefreshToken');
 
 router.post('/refresh-token', verifyRefreshToken, (req, res) => {
-  const user = req.user; // from decoded refresh token
-  const newAccessToken = jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '15m' });
+  const { userId, role } = req.user;
 
-  res.cookie('token', newAccessToken, {
+  // ✅ Generate a fresh access token (no `exp` in payload)
+  const accessToken = jwt.sign(
+    { userId, role },
+    process.env.JWT_SECRET,
+    { expiresIn: '15m' }
+  );
+
+  // ✅ Set access token cookie
+  res.cookie('accessToken', accessToken, {
     httpOnly: true,
-    sameSite: 'Lax',
-    secure: false // set to true in production (HTTPS)
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+    maxAge: 15 * 60 * 1000 // 15 minutes
   });
 
-  res.json({ message: 'Token refreshed' });
+  console.log('✅ New access token issued for user:', userId);
+  return res.status(200).json({ message: 'Access token refreshed' });
 });
 
 module.exports = router;

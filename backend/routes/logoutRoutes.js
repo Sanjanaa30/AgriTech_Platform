@@ -4,9 +4,9 @@ const router = express.Router();
 const { logout } = require('../controllers/loginController'); //
 
 router.post('/logout', (req, res) => {
-  res.clearCookie('token');
+  res.clearCookie('accessToken');
   res.clearCookie('refreshToken');
-  res.json({ message: 'Logged out successfully' });
+  return res.status(200).json({ message: 'Logged out successfully' });
 });
 
 module.exports = router;

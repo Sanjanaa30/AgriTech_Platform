@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
-const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/User');
 const Counter = require('../models/Counter');
-const { createAndSendOtp } = require('./otpController');
 const otpVerification = require('../models/otpVerification');
+const { createAndSendOtp } = require('./otpController');
 
-// Instead of saving to DB, only send OTP for verification
+// ✅ Step 1: Send OTP (without saving user yet)
 exports.registerUser = async (req, res) => {
   const {
     firstName, lastName, mobile, aadhaar, email,
@@ -45,13 +46,15 @@ exports.registerUser = async (req, res) => {
   }
 };
 
-// ✅ Step 2: Create user after OTP verification
+// ✅ Step 2: Save user after OTP verification
+// ✅ Step 2: Save user after OTP verification
 exports.registerAfterOtp = async (req, res) => {
   const { otp, userData } = req.body;
 
   const normalizedData = Object.fromEntries(
     Object.entries(userData).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])
   );
+
   const {
     firstName, lastName, mobile, aadhaar, email,
     password, state, district, role
@@ -93,7 +96,7 @@ exports.registerAfterOtp = async (req, res) => {
       state,
       district,
       roles: [role],
-      isVerified: true // You can remove this if not needed
+      isVerified: true
     });
 
     await newUser.save({ session });
@@ -101,7 +104,10 @@ exports.registerAfterOtp = async (req, res) => {
     await session.commitTransaction();
     session.endSession();
 
-    return res.status(200).json({ message: 'User registered and verified successfully.' });
+    // ✅ DO NOT log the user in yet
+    return res.status(200).json({
+      message: 'User registered and verified successfully.'
+    });
 
   } catch (err) {
     await session.abortTransaction();
@@ -110,3 +116,4 @@ exports.registerAfterOtp = async (req, res) => {
     return res.status(500).json({ message: 'Internal error. Please try again.' });
   }
 };
+

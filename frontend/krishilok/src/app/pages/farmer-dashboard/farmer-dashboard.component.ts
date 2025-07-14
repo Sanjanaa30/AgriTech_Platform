@@ -30,10 +30,11 @@ export class FarmerDashboardComponent implements OnInit, CanComponentDeactivate 
   ];
 
   constructor(private router: Router, private authService: AuthService) { }
-
+  logout(): void {
+    this.authService.logout();
+  }
 
   ngOnInit(): void {
-    // ✅ Use checkAuth to get username securely
     this.authService.checkAuth().subscribe({
       next: (res) => {
         this.username = res.user?.username || 'Farmer';
@@ -44,6 +45,7 @@ export class FarmerDashboardComponent implements OnInit, CanComponentDeactivate 
         this.router.navigate(['/login']);
       }
     });
+
 
 
     // Dynamically set page title based on route

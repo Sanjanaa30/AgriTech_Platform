@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 
 module.exports = (req, res, next) => {
-  const token = req.cookies?.accessToken; // ✅ make sure it's accessToken here
+  const token = req.cookies?.accessToken;
 
   if (!token) {
     console.warn('❌ No access token in cookie');
@@ -13,7 +13,11 @@ module.exports = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
-    console.error('❌ Invalid token:', err.message);
-    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+    if (err.name === 'TokenExpiredError') {
+      console.warn('🔒 Access token expired');
+    } else {
+      console.error('❌ Invalid access token:', err.message);
+    }
+    return res.status(401).json({ message: 'Unauthorized: Invalid or expired token' });
   }
 };
