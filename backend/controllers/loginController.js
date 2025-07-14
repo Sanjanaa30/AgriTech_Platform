@@ -159,11 +159,21 @@ exports.refreshToken = (req, res) => {
 // -------------------- LOGOUT --------------------
 exports.logout = (req, res) => {
   console.log('👋 Logging out user');
-  res.clearCookie('accessToken');
-  res.clearCookie('refreshToken');
-  console.log('✅ Cookies cleared. Logout complete.');
+
+  const cookieSettings = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production', // or false for localhost
+    sameSite: process.env.NODE_ENV === 'production' ? 'Lax' : 'Lax',
+    path: '/', // ✅ Required to match cookie path
+  };
+
+  res.clearCookie('accessToken', cookieSettings);
+  res.clearCookie('refreshToken', cookieSettings);
+
+  console.log('✅ Cookies cleared with exact config.');
   return res.status(200).json({ message: 'Logged out successfully' });
 };
+
 
 // -------------------- Utility --------------------
 function normalizeIdentifier(identifier) {
