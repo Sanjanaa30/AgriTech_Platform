@@ -60,7 +60,13 @@ exports.loginWithPassword = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000                     // 7 days
     });
 
-    return res.json({ userId: user._id, role: user.roles, message: 'Login successful' });
+    return res.json({
+      userId: user._id,
+      role: user.roles,
+      name: user.name,          // ✅ Add this line
+      email: user.email,        // (optional, for display)
+      message: 'Login successful'
+    });
   } catch (err) {
     console.error('❌ Password login error:', err.message);
     return res.status(500).json({ message: 'Internal server error' });
@@ -116,7 +122,13 @@ exports.loginWithOtp = async (req, res) => {
       maxAge: 7 * 24 * 60 * 60 * 1000                     // 7 days
     });
 
-    return res.json({ userId: user._id, role: user.roles, message: 'Login successful' });
+    return res.json({
+      userId: user._id,
+      role: user.roles,
+      name: user.name,          // ✅ Add this line
+      email: user.email,        // (optional, for display)
+      message: 'Login successful'
+    });
   } catch (err) {
     console.error('❌ OTP login error:', err.message);
     return res.status(500).json({ message: 'Internal server error' });

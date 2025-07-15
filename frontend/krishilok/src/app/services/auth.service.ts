@@ -9,7 +9,8 @@ interface AuthCheckResponse {
   user: {
     userId: string;
     username: string;
-    // add other fields like email, role, etc.
+    email?: string;
+    role?: string[];
   };
 }
 
@@ -18,6 +19,9 @@ export class AuthService {
   private baseUrl = 'http://localhost:5000/api/auth';
   private authenticated = false;
   private isLoggingOut = false;
+
+  // ✅ Track the logged-in user's info
+  public loggedInUser: { name?: string; email?: string; role?: string[] } = {};
 
   constructor(
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -56,9 +60,14 @@ export class AuthService {
     return this.http
       .post(`${this.baseUrl}/login-password`, { identifier, password }, { withCredentials: true })
       .pipe(
-        tap(() => {
+        tap((res: any) => {
           this.authenticated = true;
-          console.log('🔐 Logged in with password.');
+          this.loggedInUser = {
+            name: res.name,
+            email: res.email,
+            role: res.role
+          };
+          console.log('🔐 Logged in with password. Name:', res.name);
         })
       );
   }
@@ -67,9 +76,14 @@ export class AuthService {
     return this.http
       .post(`${this.baseUrl}/login-otp`, { identifier, otp }, { withCredentials: true })
       .pipe(
-        tap(() => {
+        tap((res: any) => {
           this.authenticated = true;
-          console.log('🔐 Logged in with OTP.');
+          this.loggedInUser = {
+            name: res.name,
+            email: res.email,
+            role: res.role
+          };
+          console.log('🔐 Logged in with OTP. Name:', res.name);
         })
       );
   }
@@ -93,7 +107,7 @@ export class AuthService {
     );
   }
 
-  logout(): void {
+ logout(): void {
     if (this.isLoggingOut) return;
 
     this.isLoggingOut = true;
@@ -103,11 +117,11 @@ export class AuthService {
       error: (err) => console.error('❌ Logout failed:', err),
       complete: () => {
         this.authenticated = false;
+        this.loggedInUser = {};
         sessionStorage.clear();
         localStorage.clear();
 
         if (isPlatformBrowser(this.platformId)) {
-          // 🚫 Prevent back navigation by wiping history entry
           window.location.replace('/login');
         }
 
@@ -115,10 +129,6 @@ export class AuthService {
       },
     });
   }
-
-
-
-
 
   setAuthenticated(status: boolean): void {
     this.authenticated = status;
@@ -128,8 +138,12 @@ export class AuthService {
     return this.authenticated;
   }
 
+  getUsername(): string {
+    return this.loggedInUser?.name || '';
+  }
+
   restoreAuthState(): void {
-    if (!isPlatformBrowser(this.platformId)) return; // 🛡 SSR safety
+    if (!isPlatformBrowser(this.platformId)) return;
     if (this.isLoggingOut) {
       console.warn('🛑 Skipping restore — logout in progress.');
       return;
@@ -138,7 +152,12 @@ export class AuthService {
     this.checkAuth().subscribe({
       next: (res) => {
         this.authenticated = true;
-        console.log('✅ Session restored. User:', res.user?.userId);
+        this.loggedInUser = {
+          name: res.user?.username,  // 🔁 Match backend key (change if needed)
+          email: res.user?.email,
+          role: res.user?.role
+        };
+        console.log('✅ Session restored. User:', res.user?.username);
       },
       error: () => {
         this.authenticated = false;
@@ -146,5 +165,4 @@ export class AuthService {
       }
     });
   }
-
 }

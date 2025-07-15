@@ -14,12 +14,10 @@ const authRoutes = require('./routes/authRoutes');
 
 const app = express();
 
-// ✅ Allow frontend (localhost:4200) to send cookies
 app.use(cors({
-  origin: 'http://localhost:4200',
-  credentials: true
+  origin: 'http://localhost:4200',  // your frontend origin
+  credentials: true                 // 🔥 allow sending cookies
 }));
-
 app.use(express.json());
 app.use(cookieParser());
 
