@@ -1,61 +1,166 @@
-<div *ngIf="section === 'my-crops'">
-    <!-- My Crops content here -->
-    <div *ngIf="section === 'my-crops'" class="p-6 text-gray-800">
-        <!-- Header and Add Button -->
-        <div class="flex items-center justify-between mb-4">
-            <h2 class="text-2xl font-semibold">🌾 My Crops</h2>
-            <button (click)="openAddCropModal()" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-                ➕ Add Crop
-            </button>
+<div *ngIf="section === 'my-crops'" class="p-6 text-gray-800">
+    <!-- Header + Filter + Sort -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
+        <!-- Add Crop Button -->
+        <button (click)="showAddCropModal = true" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+            ➕ Add Crop
+        </button>
+
+        <!-- Add Crop Modal -->
+        <div *ngIf="showAddCropModal"
+            class="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
+            <div class="bg-white w-[95%] md:w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl relative">
+
+                <button (click)="showAddCropModal = false"
+                    class="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-lg">✖</button>
+
+                <h2 class="text-xl font-semibold text-gray-800 mb-4">🌱 Add New Crop</h2>
+
+                <!-- Section A: Basic Info -->
+                <div class="space-y-4">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🌾 Crop Name *</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.name">
+                            <option value="">Select Crop</option>
+                            <option>Tomato</option>
+                            <option>Wheat</option>
+                            <option>Maize</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🔤 Variety</label>
+                        <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.variety"
+                            placeholder="e.g., Roma, Basmati 1121" />
+                    </div>
+
+                    <div class="flex flex-col md:flex-row md:space-x-4">
+                        <div class="flex-1">
+                            <label class="block text-sm font-medium text-gray-700">📅 Sowing Date *</label>
+                            <input type="date" class="w-full mt-1 p-2 border rounded"
+                                [(ngModel)]="newCrop.sowingDate" />
+                        </div>
+
+                        <div class="flex-1 mt-4 md:mt-0">
+                            <label class="block text-sm font-medium text-gray-700">📆 Expected Harvest *</label>
+                            <input type="date" class="w-full mt-1 p-2 border rounded"
+                                [(ngModel)]="newCrop.harvestDate" />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🖼️ Crop Image</label>
+                        <input type="file" class="w-full mt-1 p-2 border rounded" />
+                        <!-- Optional: Show preview here later -->
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">⚙️ Status *</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.status">
+                            <option value="">Select Status</option>
+                            <option>Sowing</option>
+                            <option>Growing</option>
+                            <option>Harvesting</option>
+                            <option>Ready for Market</option>
+                        </select>
+                    </div>
+
+                </div>
+
+                <!-- Section B: Additional Info -->
+                <hr class="my-6" />
+
+                <div class="space-y-4">
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">📐 Area (in acres) *</label>
+                        <input type="number" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.area" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">💧 Irrigation Type *</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.irrigationType">
+                            <option value="">Select Type</option>
+                            <option>Drip</option>
+                            <option>Sprinkler</option>
+                            <option>Flood</option>
+                        </select>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">🧠 AI Health Score</label>
+                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'82 (Auto)'"
+                                disabled />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">🛒 Listed for Sale?</label>
+                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'Yes'"
+                                disabled />
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🗒️ Last Activity</label>
+                        <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.lastActivity"
+                            placeholder="e.g., Fertilizer applied" />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">⏱️ Time Since Sowed</label>
+                        <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'42 days (Auto)'"
+                            disabled />
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🧾 Notes History</label>
+                        <textarea rows="3" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.notes"
+                            placeholder="Write notes..."></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Submit -->
+                <div class="mt-6 text-right">
+                    <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                        ✅ Save Crop
+                    </button>
+                </div>
+
+            </div>
         </div>
 
-        <!-- Crop Summary -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
-            <div class="bg-white rounded shadow p-4">
-                <p class="text-sm text-gray-600">Total Crops</p>
-                <h3 class="text-xl font-bold">{{ crops.length }}</h3>
-            </div>
-            <div class="bg-white rounded shadow p-4">
-                <p class="text-sm text-gray-600">Crop Types</p>
-                <h3 class="text-xl font-bold">{{ uniqueCropTypes }}</h3>
-            </div>
-            <div class="bg-white rounded shadow p-4">
-                <p class="text-sm text-gray-600">Sown Crops</p>
-                <h3 class="text-xl font-bold">{{ sownCrops }}</h3>
-            </div>
-        </div>
 
-        <!-- Crops Table -->
-        <div class="overflow-auto">
-            <table class="min-w-full bg-white rounded shadow">
-                <thead class="bg-green-600 text-white">
-                    <tr>
-                        <th class="text-left px-4 py-2">Crop Name</th>
-                        <th class="text-left px-4 py-2">Type</th>
-                        <th class="text-left px-4 py-2">Sowing Date</th>
-                        <th class="text-left px-4 py-2">Status</th>
-                        <th class="text-left px-4 py-2">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let crop of crops" class="border-b hover:bg-gray-100">
-                        <td class="px-4 py-2">{{ crop.name }}</td>
-                        <td class="px-4 py-2">{{ crop.type }}</td>
-                        <td class="px-4 py-2">{{ crop.sowingDate }}</td>
-                        <td class="px-4 py-2">{{ crop.status }}</td>
-                        <td class="px-4 py-2 space-x-2">
-                            <button (click)="editCrop(crop)" class="text-blue-600 hover:underline">Edit</button>
-                            <button (click)="deleteCrop(crop)" class="text-red-600 hover:underline">Delete</button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+        <!-- Filter + Sort Controls -->
+        <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+            <!-- Filter by Status -->
+            <select [(ngModel)]="filterStatus"
+                class="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-auto">
+                <option value="">Filter by Status</option>
+                <option value="Sowing">Sowing</option>
+                <option value="Growing">Growing</option>
+                <option value="Harvesting">Harvesting</option>
+                <option value="Ready for Market">Ready for Market</option>
+            </select>
 
-        <!-- Modal (Optional) -->
-        <!-- You can add an *ngIf modal block here if needed -->
+            <!-- Sort By -->
+            <select [(ngModel)]="sortBy" class="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-auto">
+                <option value="">Sort by</option>
+                <option value="name">Name</option>
+                <option value="sowingDate">Sowing Date</option>
+                <option value="harvestDate">Harvest Date</option>
+            </select>
+        </div>
     </div>
 
+    <!-- Crop Cards -->
+    <div *ngFor="let crop of filteredCrops">
+        <app-crop-card [crop]="crop" (edit)="editCrop($event)" (statusUpdate)="updateCropStatus($event)"
+            (viewMore)="viewMoreDetails($event)" (delete)="deleteCrop($event)">
+        </app-crop-card>
+    </div>
 </div>
 
 <div *ngIf="section === 'ai-insights'">

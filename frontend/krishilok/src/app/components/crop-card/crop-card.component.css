@@ -1,0 +1,17 @@
+/* Add soft transition for hover effects */
+:host {
+  display: block;
+  transition: box-shadow 0.2s ease;
+}
+
+/* Optional: fallback for broken image links */
+img {
+  object-fit: cover;
+  background-color: #f3f4f6; /* Tailwind gray-100 */
+}
+
+/* Optional: better focus/keyboard accessibility for buttons */
+button:focus {
+  outline: 2px solid #10b981; /* Tailwind green-500 */
+  outline-offset: 2px;
+}

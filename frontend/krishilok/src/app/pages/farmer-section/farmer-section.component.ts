@@ -1,38 +1,93 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { CropCardComponent } from '../../components/crop-card/crop-card.component';
 
 @Component({
   selector: 'app-farmer-section',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './farmer-section.component.html'
+  imports: [CommonModule, FormsModule, CropCardComponent],
+  templateUrl: './farmer-section.component.html',
+  styleUrls: ['./farmer-section.component.css']
 })
 export class FarmerSectionComponent {
-
   section: string = '';
-  
+
   constructor(private route: ActivatedRoute) {
     this.section = this.route.snapshot.paramMap.get('section') || '';
   }
+  showAddCropModal = false;
 
+  newCrop = {
+    name: '',
+    variety: '',
+    sowingDate: '',
+    harvestDate: '',
+    imageUrl: '',
+    status: '',
+    area: '',
+    irrigationType: '',
+    lastActivity: '',
+    notes: ''
+  };
+
+  // Filter/Sort controls
+  filterStatus = '';
+  sortBy = '';
+
+  // Dummy crops with additional fields
   crops = [
-    { name: 'Tomato', type: 'Vegetable', sowingDate: '2024-06-10', status: 'Sown' },
-    { name: 'Wheat', type: 'Cereal', sowingDate: '2024-05-15', status: 'Harvested' },
-    { name: 'Chili', type: 'Vegetable', sowingDate: '2024-06-01', status: 'Sown' }
+    {
+      name: 'Wheat',
+      type: 'Durum',
+      sowingDate: '2024-03-01',
+      harvestDate: '2024-08-15',
+      status: 'Growing',
+      imageUrl: 'https://yourcdn.com/wheat.jpg'
+    },
+    {
+      name: 'Maize',
+      type: 'Dent',
+      sowingDate: '2024-04-01',
+      harvestDate: '2024-09-10',
+      status: 'Growing',
+      imageUrl: 'https://yourcdn.com/maize.jpg'
+    },
+    {
+      name: 'Tornatoes',
+      type: 'Roma',
+      sowingDate: '2024-02-20',
+      harvestDate: '2024-07-30',
+      status: 'Ready for Market',
+      imageUrl: 'https://yourcdn.com/tomatoes.jpg'
+    }
   ];
 
-  get uniqueCropTypes() {
-    const types = this.crops.map(c => c.type);
-    return new Set(types).size;
+  // Computed crop list
+  get filteredCrops() {
+    let result = [...this.crops];
+
+    // Filter by status
+    if (this.filterStatus) {
+      result = result.filter(crop => crop.status === this.filterStatus);
+    }
+
+    // Sort logic
+    if (this.sortBy === 'name') {
+      result.sort((a, b) => a.name.localeCompare(b.name));
+    } else if (this.sortBy === 'sowingDate') {
+      result.sort((a, b) => new Date(a.sowingDate).getTime() - new Date(b.sowingDate).getTime());
+    } else if (this.sortBy === 'harvestDate') {
+      result.sort((a, b) => new Date(a.harvestDate).getTime() - new Date(b.harvestDate).getTime());
+    }
+
+    return result;
   }
 
-  get sownCrops() {
-    return this.crops.filter(c => c.status.toLowerCase() === 'sown').length;
-  }
-
+  // Placeholder actions
   openAddCropModal() {
-    alert('This would open a modal to add a new crop (not implemented yet).');
+    alert('Open Add Crop modal (UI only)');
   }
 
   editCrop(crop: any) {
@@ -46,4 +101,11 @@ export class FarmerSectionComponent {
     }
   }
 
+  updateCropStatus(crop: any) {
+    alert('Update status for: ' + crop.name);
+  }
+
+  viewMoreDetails(crop: any) {
+    alert('Show details for: ' + crop.name);
+  }
 }

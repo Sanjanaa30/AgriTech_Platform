@@ -1,0 +1,85 @@
+<div
+    class="flex flex-col md:flex-row items-center justify-between bg-white border rounded-lg p-4 mb-4 shadow-sm gap-4 md:gap-0 w-full">
+
+    <!-- Image -->
+    <div class="flex-shrink-0 w-20 h-20 rounded overflow-hidden">
+        <img [src]="crop.imageUrl" alt="Crop Image" class="w-full h-full object-cover rounded">
+    </div>
+
+    <!-- Crop Info -->
+    <div class="flex-1 md:ml-6 text-left w-full">
+        <h3 class="text-lg font-semibold text-gray-900">{{ crop.name }}</h3>
+        <p class="text-sm text-gray-600" *ngIf="crop.variety">{{ crop.variety }}</p>
+        <p class="text-sm text-gray-700 mt-1">
+            📅 Sowing {{ crop.sowingDate | date: 'MMM yyyy' }}
+        </p>
+    </div>
+
+    <!-- Status Badge -->
+    <div class="flex justify-center md:justify-end md:ml-auto w-full md:w-auto">
+        <span *ngIf="crop.status" class="text-sm font-medium px-3 py-1 rounded-full whitespace-nowrap" [ngClass]="{
+            'bg-yellow-100 text-yellow-800': crop.status === 'Harvesting',
+            'bg-green-100 text-green-800': crop.status === 'Growing',
+            'bg-blue-100 text-blue-800': crop.status === 'Sowing',
+            'bg-purple-100 text-purple-800': crop.status === 'Ready for Market'
+          }">
+            {{ crop.status }}
+        </span>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-wrap gap-2 mt-4 md:mt-0 md:ml-6 justify-center md:justify-start w-full md:w-auto">
+        <button (click)="onViewMore()" class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm">
+            More details
+        </button>
+        <button (click)="onStatusUpdate()" class="px-3 py-1 border border-gray-300 rounded hover:bg-gray-100 text-sm">
+            Update Status
+        </button>
+        <button (click)="onEdit()"
+            class="px-3 py-1 border border-blue-300 text-blue-700 rounded hover:bg-blue-50 text-sm">
+            Edit
+        </button>
+        <button (click)="onDelete()"
+            class="px-3 py-1 border border-red-300 text-red-700 rounded hover:bg-red-50 text-sm">
+            Delete
+        </button>
+    </div>
+    <!-- More Details Modal -->
+    <div *ngIf="showDetails" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-[95%] md:w-[600px] max-h-[90vh] overflow-y-auto relative">
+
+            <button (click)="showDetails = false" class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                ✖
+            </button>
+
+            <h2 class="text-xl font-semibold text-gray-800 mb-4">📄 Crop Details</h2>
+
+            <div class="space-y-3 text-sm text-gray-700">
+                <p><strong>📐 Area:</strong> 1.5 acres</p>
+                <p><strong>💧 Irrigation Type:</strong> Drip</p>
+                <p><strong>🧠 AI Health Score:</strong> 82 / 100</p>
+                <p><strong>🛒 Listed for Sale:</strong> Yes</p>
+                <p><strong>🗒️ Last Activity:</strong> Fertilizer applied on July 14</p>
+                <p><strong>⏱️ Time Since Sowed:</strong> 42 days</p>
+
+                <div>
+                    <strong>🧾 Notes History:</strong>
+                    <ul class="list-disc list-inside mt-1 ml-2 text-gray-600">
+                        <li>July 10: Irrigation completed</li>
+                        <li>July 5: Pesticide sprayed</li>
+                        <li>July 1: Sowing completed</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 text-right">
+                <button (click)="showDetails = false"
+                    class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    Close
+                </button>
+            </div>
+
+        </div>
+    </div>
+
+</div>

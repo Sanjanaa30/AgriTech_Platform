@@ -34,7 +34,7 @@ export const routes: Routes = [
     canDeactivate: [ConfirmExitGuard], // ✅ Add this line
     children: [
       { path: '', component: FarmerOverviewComponent }, // new
-      { path: 'my-crops', component: FarmerSectionComponent },
+      { path: ':section', component: FarmerSectionComponent },
       // { path: 'field-images', component: FieldImagesComponent },
       // { path: 'marketplace', component: MarketplaceComponent },
       // etc...
