@@ -7,6 +7,7 @@
         </button>
 
         <!-- Add Crop Modal -->
+        <!-- Add Crop Modal -->
         <div *ngIf="showAddCropModal"
             class="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
             <div class="bg-white w-[95%] md:w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl relative">
@@ -19,29 +20,51 @@
                 <!-- Section A: Basic Info -->
                 <div class="space-y-4">
 
+                    <!-- Category Dropdown -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🌾 Crop Name *</label>
-                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.name">
-                            <option value="">Select Crop</option>
-                            <option>Tomato</option>
-                            <option>Wheat</option>
-                            <option>Maize</option>
+                        <label class="block text-sm font-medium text-gray-700">📂 Category *</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.category"
+                            (change)="onCategoryChange()">
+                            <option value="">Select Category</option>
+                            <option *ngFor="let cat of categories">{{ cat }}</option>
                         </select>
                     </div>
 
+                    <!-- Crop Dropdown -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🔤 Variety</label>
-                        <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.variety"
-                            placeholder="e.g., Roma, Basmati 1121" />
+                        <label class="block text-sm font-medium text-gray-700">🌾 Crop Name *</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.name"
+                            (change)="onCropChange()">
+                            <option value="">Select Crop</option>
+                            <option *ngFor="let crop of cropOptions">{{ crop.NAME }}</option>
+                        </select>
                     </div>
 
+                    <!-- Season Badge -->
+                    <div *ngIf="seasonBadge" class="mt-1">
+                        <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded">
+                            🏷️ {{ seasonBadge }}
+                        </span>
+                    </div>
+
+                    <!-- Variety -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">🔤 Variety</label>
+                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.variety">
+                            <option value="">Select or type manually</option>
+                            <option *ngFor="let v of varietyOptions">{{ v }}</option>
+                        </select>
+                        <input *ngIf="!varietyOptions.length" type="text" class="w-full mt-2 p-2 border rounded"
+                            [(ngModel)]="newCrop.variety" placeholder="e.g., Roma, Basmati 1121" />
+                    </div>
+
+                    <!-- Sowing & Harvest Date -->
                     <div class="flex flex-col md:flex-row md:space-x-4">
                         <div class="flex-1">
                             <label class="block text-sm font-medium text-gray-700">📅 Sowing Date *</label>
                             <input type="date" class="w-full mt-1 p-2 border rounded"
                                 [(ngModel)]="newCrop.sowingDate" />
                         </div>
-
                         <div class="flex-1 mt-4 md:mt-0">
                             <label class="block text-sm font-medium text-gray-700">📆 Expected Harvest *</label>
                             <input type="date" class="w-full mt-1 p-2 border rounded"
@@ -49,12 +72,14 @@
                         </div>
                     </div>
 
+                    <!-- Image Upload -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700">🖼️ Crop Image</label>
-                        <input type="file" class="w-full mt-1 p-2 border rounded" />
-                        <!-- Optional: Show preview here later -->
+                        <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.imageUrl"
+                            placeholder="Enter image URL for now" />
                     </div>
 
+                    <!-- Status -->
                     <div>
                         <label class="block text-sm font-medium text-gray-700">⚙️ Status *</label>
                         <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.status">
@@ -65,16 +90,13 @@
                             <option>Ready for Market</option>
                         </select>
                     </div>
-
                 </div>
 
                 <!-- Section B: Additional Info -->
                 <hr class="my-6" />
-
                 <div class="space-y-4">
-
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">📐 Area (in acres) *</label>
+                        <label class="block text-sm font-medium text-gray-700">📐 Area (acres) *</label>
                         <input type="number" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.area" />
                     </div>
 
@@ -91,13 +113,12 @@
                     <div class="grid grid-cols-2 gap-4">
                         <div>
                             <label class="block text-sm font-medium text-gray-700">🧠 AI Health Score</label>
-                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'82 (Auto)'"
+                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" value="82 (Auto)"
                                 disabled />
                         </div>
-
                         <div>
                             <label class="block text-sm font-medium text-gray-700">🛒 Listed for Sale?</label>
-                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'Yes'"
+                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" value="Yes"
                                 disabled />
                         </div>
                     </div>
@@ -109,28 +130,22 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">⏱️ Time Since Sowed</label>
-                        <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" [value]="'42 days (Auto)'"
-                            disabled />
-                    </div>
-
-                    <div>
                         <label class="block text-sm font-medium text-gray-700">🧾 Notes History</label>
                         <textarea rows="3" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.notes"
                             placeholder="Write notes..."></textarea>
                     </div>
-
                 </div>
 
-                <!-- Submit -->
+                <!-- Save Button -->
                 <div class="mt-6 text-right">
-                    <button class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+                    <button (click)="saveNewCrop()"
+                        class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
                         ✅ Save Crop
                     </button>
                 </div>
-
             </div>
         </div>
+
 
 
         <!-- Filter + Sort Controls -->

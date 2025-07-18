@@ -1,0 +1,1576 @@
+[
+  {
+    "CATEGORY": "Cereals",
+    "CROPS": [
+      {
+        "NAME": "Rice",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": {
+          "BASMATI": [
+            "Pusa Basmati 1121",
+            "Pusa Basmati 1509",
+            "Pusa Basmati 6",
+            "Pusa Basmati 1",
+            "Dehraduni Basmati",
+            "Taraori Basmati",
+            "Ranbir Basmati",
+            "Basmati 370",
+            "Punjab Basmati 3"
+          ],
+          "NON_BASMATI_(HYV)": [
+            "IR-64",
+            "Swarna (MTU-7029)",
+            "MTU-1010",
+            "Jaya",
+            "Savitri",
+            "Naveen",
+            "Sarju-52",
+            "Rasi"
+          ],
+          "TRADITIONAL_/_INDIGENOUS": [
+            "Samba Mahsuri",
+            "BPT 5204 (Sona Masuri)",
+            "Chak-Hao",
+            "Kalanamak",
+            "Gobindobhog",
+            "Jeerakasala",
+            "Ambemohar",
+            "Navara",
+            "Kullakar",
+            "Karunguruvai",
+            "Mullan Kazhama",
+            "Sona Masuri (BPT 5204)"
+          ],
+          "HYBRID": [
+            "KRH-2",
+            "DRRH-3",
+            "DRRH-2",
+            "Ajay",
+            "Rajalaxmi",
+            "Arize 6444 Gold",
+            "US-312",
+            "US-382",
+            "JKRH-401"
+          ],
+          "CLIMATE_SMART": [
+            "Sahbhagi Dhan",
+            "DRR Dhan 44",
+            "DRR Dhan 50",
+            "CR Dhan 801",
+            "Kalinga III"
+          ]
+        },
+        "ID": "0fbc147d-0e82-42a5-9b7e-dc2768ef70a4"
+      },
+      {
+        "NAME": "Wheat",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": {
+          "HIGH_YIELD_(HDVS)": [
+            "PBW 343",
+            "Sharbati",
+            "HD 2967",
+            "Lok-1 (Lokwan)",
+            "Bansi",
+            "Kalyansona",
+            "MACS 6222",
+            "HIW 8759 (Pusa Tejas)"
+          ],
+          "HERITAGE_VARITIES": [
+            "Khapli (Emmer Wheat)",
+            "Kharchia Local",
+            "Kharchia 65"
+          ],
+          "CLIMATE_SMART": [
+            "PBW1 Chapati",
+            "PBW Zinc 2",
+            "PBW1 Biscuit",
+            "AKAW 5100",
+            "DBW series"
+          ]
+        },
+        "ID": "4137ca51-e301-4c33-910d-12af09d6ac8b"
+      },
+      {
+        "NAME": "Maize",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": {
+          "QUALITY_PROTEIN_(QPM)": [
+            "HQPM-1",
+            "HQPM-5",
+            "HQPM-7",
+            "Vivek QPM-9",
+            "Shaktiman"
+          ],
+          "PROA_BIOFORTIFIED_HYBRIDS": [
+            "Pusa HQPM-1",
+            "Pusa Bio-fortified Hybrid-1"
+          ],
+          "HIGH_YIELD_GENERAL_PURPOSE": [
+            "Pusa HM4",
+            "HQPM 4",
+            "DHM-117"
+          ],
+          "SPECIAL_PURPOSE": [
+            "Sweet Corn",
+            "Baby Corn",
+            "Fodder Maize"
+          ]
+        },
+        "ID": "c1d89f2d-4436-4255-a303-33807007843c"
+      },
+      {
+        "NAME": "Barley",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "772c6589-91dd-4a9a-b9e4-60400d28bc18"
+      },
+      {
+        "NAME": "Oats",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "28954bfd-bb23-478a-914b-040559239ba3"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Millets",
+    "CROPS": [
+      {
+        "NAME": "Jowar",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "CSH-14",
+          "M-35-1",
+          "CSV-15",
+          "SPV-462"
+        ],
+        "ID": "3a0be920-fa80-4c1b-a4a7-50ae351de86f"
+      },
+      {
+        "NAME": "Bajra",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "HHB-67 Improved",
+          "ICTP 8203",
+          "RHB-177"
+        ],
+        "ID": "6e33ad61-6c77-4cbb-9585-7905e19127db"
+      },
+      {
+        "NAME": "Ragi",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "GPU-28",
+          "Indaf-9",
+          "PR-202",
+          "MR-6"
+        ],
+        "ID": "7bc05645-dfa2-4572-b906-28002f60ef34"
+      },
+      {
+        "NAME": "Kodo Millet",
+        "SEASON": [
+          "Rabi",
+          "short-season"
+        ],
+        "VARIETIES": [
+          "Kodo-Local"
+        ],
+        "ID": "d49b1229-716a-47d9-aa00-01ca406b8fec"
+      },
+      {
+        "NAME": "Kutki",
+        "SEASON": [
+          "Short-duration"
+        ],
+        "VARIETIES": [
+          "OLM-203",
+          "RLM-37"
+        ],
+        "ID": "6fa57e3b-84ed-4dbc-a30c-0f06d0f9fbc9"
+      },
+      {
+        "NAME": "Barnyard Millet",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "VL-207",
+          "PRJ-1"
+        ],
+        "ID": "999185a6-8be8-466a-ae19-058dc28a8349"
+      },
+      {
+        "NAME": "Foxtail Millet",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "SIA-326",
+          "Prasad"
+        ],
+        "ID": "00303f04-e6b3-4224-8276-ab415a0ce6b1"
+      },
+      {
+        "NAME": "Proso Millet",
+        "SEASON": [
+          "Minor/short-duration"
+        ],
+        "VARIETIES": [
+          "CO-3",
+          "TNAU-202"
+        ],
+        "ID": "642331ca-cdbf-46e5-9220-094c8a46f232"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Pulses",
+    "CROPS": [
+      {
+        "NAME": "Chickpea Gram (Chana Dal)",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "fe952bad-251a-4bee-a083-553e0cfa0796"
+      },
+      {
+        "NAME": "Pigeon Gram (Toor Dal)",
+        "SEASON": [
+          "Karif"
+        ],
+        "VARIETIES": [],
+        "ID": "8905e23f-a411-4cc2-9e46-3e160f8e599a"
+      },
+      {
+        "NAME": "Green Gram (Moong Bean",
+        "SEASON": [
+          "Kharif",
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "ID": "69097d4b-b4d5-46d9-8328-901671333ee7"
+      },
+      {
+        "NAME": "Horse Gram",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "c582e9c0-a124-4549-83a4-e82d64edf099"
+      },
+      {
+        "NAME": "Black Gram (Urad Dal)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "cda57f43-f665-4229-afae-b0cb328510c3"
+      },
+      {
+        "NAME": "Lentil (Masoor Dal)",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "e18ac5ee-fa1b-4ee3-a498-84b62f78432f"
+      },
+      {
+        "NAME": "Field Pea (Matar)",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "7be839b2-a357-4734-94c4-658d0971d900"
+      },
+      {
+        "NAME": "Cow Pea",
+        "SEASON": [
+          "Karif"
+        ],
+        "VARIETIES": [],
+        "ID": "46ba6308-fb82-4034-9c56-30c0851a8eb0"
+      },
+      {
+        "NAME": "Moth Beans (Matki)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "c6a3595b-09b9-4a32-a3d3-d5590aa2d2b3"
+      },
+      {
+        "NAME": "Kidney Beans (Rajma)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "7351d468-f420-4923-a5a4-37a919c20fb4"
+      },
+      {
+        "NAME": "Faba Beans (Masyang/Bhatt)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "0590297b-a180-4eca-b170-9cae1cdaf3b4"
+      },
+      {
+        "NAME": "Winged Beans (Goa Beans)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "e5fdd8b3-8341-4d64-99ac-d54a2d2ba1ac"
+      },
+      {
+        "NAME": "Soy Beans",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "6694cb2a-967c-4fd6-b71c-6115c05cb6ed"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Oilseeds",
+    "CROPS": [
+      {
+        "NAME": "Groundnut",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "42966583-a900-42f6-822c-7c516323c154"
+      },
+      {
+        "NAME": "Soybean",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "8d2518a6-7c56-41a5-9234-82dd57c5c19a"
+      },
+      {
+        "NAME": "Mustard",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "557821d0-88b1-41d7-92b1-6aae7001f4dc"
+      },
+      {
+        "NAME": "Sunflower",
+        "SEASON": [
+          "Rabi",
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "ID": "6b4921a1-2750-487d-94c6-5c0defad1335"
+      },
+      {
+        "NAME": "Sesame (Til)",
+        "SEASON": [
+          "Kharif",
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "ID": "2b013354-de73-4ad8-8ff1-e1487ab146e5"
+      },
+      {
+        "NAME": "Niger seed (Ramtil)",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "259e4ade-84ed-4cfd-902a-8d2f77897a7a"
+      },
+      {
+        "NAME": "Safflower",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "d33d3419-21f9-4450-9eaf-f4eccc50386e"
+      },
+      {
+        "NAME": "Linseed (Alsi)",
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "c4e72100-b901-4809-b644-977b6d1e7a48"
+      },
+      {
+        "NAME": "Castor",
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": [],
+        "ID": "36a47e6d-887a-4237-bc37-b468bd062eb2"
+      },
+      {
+        "NAME": "Coconut (for Copra)",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "87019802-72da-4dd1-9914-4725886fdaaf"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Cash Crops",
+    "CROPS": [
+      {
+        "NAME": "Sugarcane",
+        "SEASON": [
+          "Annual"
+        ],
+        "VARIETIES": [],
+        "ID": "949fb313-5103-4a30-aa29-e8d03674dca0"
+      },
+      {
+        "NAME": "Cotton",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "d39a7f14-6527-4018-abfe-562d441c9334"
+      },
+      {
+        "NAME": "Jute",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "238986f2-5654-43b3-9e1b-817736e350e2"
+      },
+      {
+        "NAME": "Tobacco",
+        "SEASON": [
+          "Rabi",
+          "Annual"
+        ],
+        "VARIETIES": [],
+        "ID": "4dd8b105-f42b-479d-96a6-5374a4f229ef"
+      },
+      {
+        "NAME": "Tea",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "d4ba2d49-4003-493c-815d-65151ecc8309"
+      },
+      {
+        "NAME": "Coffee",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "5d0905d8-668d-4c65-9145-c445795d9032"
+      },
+      {
+        "NAME": "Rubber",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "a074fc0d-570d-4ec8-8792-d36691a51aec"
+      },
+      {
+        "NAME": "Coconut",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "5a8f89d6-4330-4691-b8ba-01bda8562f75"
+      },
+      {
+        "NAME": "Arecanut",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "048cdacd-6cbb-44f1-be59-579ad903ff19"
+      },
+      {
+        "NAME": "Betel Leaf",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "4ca94303-104f-46f9-bcd3-a3bc38791c5f"
+      },
+      {
+        "NAME": "Cocoa",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "e97443f8-6150-4c96-9652-b9435e3c94fe"
+      },
+      {
+        "NAME": "Oil Palm",
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [],
+        "ID": "ea095e18-f746-48e7-aedf-b7282af9332c"
+      },
+      {
+        "NAME": "Mesta",
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [],
+        "ID": "bb6cfb93-23ce-4b45-9e21-f68c767b48dd"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Fruits",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [
+          "Alphonso",
+          "Dasheri",
+          "Langra",
+          "Banganapalli",
+          "Kesar",
+          "Totapuri",
+          "Mallika",
+          "Neelum"
+        ],
+        "NAME": "Mango",
+        "ID": "8be11b2f-81ef-42f3-affb-dcee71788ce2"
+      },
+      {
+        "SEASON": [
+          "Year-round"
+        ],
+        "VARIETIES": [],
+        "NAME": "Banana",
+        "ID": "8e35bf35-e324-48fb-99c5-60516ed4fdb4"
+      },
+      {
+        "SEASON": [
+          "Year-round"
+        ],
+        "VARIETIES": [],
+        "NAME": "Papaya",
+        "ID": "09f37187-cc6d-47b0-a1ab-121d1dc26eb3"
+      },
+      {
+        "SEASON": [
+          "Monsoon to Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Guava",
+        "ID": "304d3f9a-0d9d-4004-acb2-bfd56e3ddee1"
+      },
+      {
+        "SEASON": [
+          "Summer to Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Pomegranate",
+        "ID": "146f6a9f-b9c2-46d8-ab30-f8e6b9041ef9"
+      },
+      {
+        "SEASON": [
+          "Monsoon"
+        ],
+        "VARIETIES": [],
+        "NAME": "Sweet Lime (Mosambi)",
+        "ID": "7a3ad490-90dd-4c80-a3e6-beacd54ee645"
+      },
+      {
+        "SEASON": [
+          "Year-round"
+        ],
+        "VARIETIES": [],
+        "NAME": "Lemon",
+        "ID": "9fee6c1d-dc25-487f-aef5-c79b65b04ee4"
+      },
+      {
+        "SEASON": [
+          "Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Orange",
+        "ID": "c0055617-153a-452a-96cc-d68eba7347a1"
+      },
+      {
+        "SEASON": [
+          "Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Mandarin",
+        "ID": "8ec6c19b-adf0-4fb3-9479-bdab99fa9839"
+      },
+      {
+        "SEASON": [
+          "Spring to Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Grapes",
+        "ID": "40a0a2fa-364a-4c9d-a154-08aaebe85f89"
+      },
+      {
+        "SEASON": [
+          "Autumn (July to October)"
+        ],
+        "VARIETIES": [
+          "Red Delicious",
+          "Royal Gala",
+          "Golden Delicious",
+          "Ambri",
+          "Granny Smith"
+        ],
+        "NAME": "Apple",
+        "ID": "29d85b9c-99ab-4b10-8681-1fe163a5d179"
+      },
+      {
+        "SEASON": [
+          "Year-round (Peak: May\u2013July)"
+        ],
+        "VARIETIES": [],
+        "NAME": "Pineapple",
+        "ID": "736cfb7b-1145-485a-9897-d0c0548ca616"
+      },
+      {
+        "SEASON": [
+          "Summer (May\u2013June)"
+        ],
+        "VARIETIES": [],
+        "NAME": "Litchi",
+        "ID": "dfa372e4-7224-466d-ad34-c83bb43b1bc4"
+      },
+      {
+        "SEASON": [
+          "Late Monsoon to Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Custard Apple (Sitaphal)",
+        "ID": "97152477-610d-4896-93ac-2890727dd0e4"
+      },
+      {
+        "SEASON": [
+          "Year-round"
+        ],
+        "VARIETIES": [],
+        "NAME": "Sapota (Chikoo)",
+        "ID": "5ed2c537-251a-4a23-80c6-b4aac5d24170"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Jackfruit",
+        "ID": "754180f1-261f-44d5-8496-ca2512ad9bca"
+      },
+      {
+        "SEASON": [
+          "Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Ber (Indian Jujube)",
+        "ID": "cfce1cf0-7ee2-437b-992a-650ff82d8570"
+      },
+      {
+        "SEASON": [
+          "Summer (June\u2013August)"
+        ],
+        "VARIETIES": [],
+        "NAME": "Jamun",
+        "ID": "afc43025-0425-43f8-bbbc-7c519ab9ef1a"
+      },
+      {
+        "SEASON": [
+          "Autumn to Winter"
+        ],
+        "VARIETIES": [],
+        "NAME": "Aonla (Indian Gooseberry)",
+        "ID": "a4e61b66-ce4a-4c0f-a011-e7b10c7d8b8f"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Peach",
+        "ID": "770c2505-10f5-4f12-8da7-dfd0629e996c"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Plum",
+        "ID": "2b3d106a-991e-4608-b530-c91602f1a969"
+      },
+      {
+        "SEASON": [
+          "Late Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Pear",
+        "ID": "b0443d28-f42b-452b-ab54-9c599027fca4"
+      },
+      {
+        "SEASON": [
+          "Winter (Dec\u2013March)"
+        ],
+        "VARIETIES": [],
+        "NAME": "Strawberry",
+        "ID": "0ae2ded3-3182-42de-8b4f-46f9be0406d6"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Karonda (Natal Plum)",
+        "ID": "023d8a65-ade8-415c-b7a0-91cbe3f4c1d7"
+      },
+      {
+        "SEASON": [
+          "Spring"
+        ],
+        "VARIETIES": [],
+        "NAME": "Mulberry",
+        "ID": "46fd28b0-5814-4766-94ca-045218eb59cd"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Fig (Anjeer)",
+        "ID": "55cd4aa5-c808-4976-8569-479ee03e56b3"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Watermelon",
+        "ID": "a59abba0-4129-44e0-aa4e-4526d637736e"
+      },
+      {
+        "SEASON": [
+          "Summer"
+        ],
+        "VARIETIES": [],
+        "NAME": "Muskmelon (Kharbuja)",
+        "ID": "6df69c3c-acec-49c0-a471-406a81304376"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Vegetables",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Potato",
+        "VARIETIES": [],
+        "ID": "a0d1a326-1bb3-48d9-9e99-9bda4ef51088"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi",
+          "Late Kharif"
+        ],
+        "NAME": "Onion",
+        "VARIETIES": [],
+        "ID": "9578f325-67bf-426e-b670-6fce0db0c2e9"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Tomato",
+        "VARIETIES": [],
+        "ID": "afc792ea-fc70-485f-b987-f369df3e884f"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Brinjal (Eggplant)",
+        "VARIETIES": [],
+        "ID": "8e117629-4475-41cc-b535-efd42d8c5059"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Cabbage",
+        "VARIETIES": [],
+        "ID": "3f4a7abd-f32c-466e-b7d3-443faa9cdb07"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Kharif (Early)"
+        ],
+        "NAME": "Cauliflower",
+        "VARIETIES": [],
+        "ID": "dc202808-4335-43b0-9713-2d0c58b6869a"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "Okra (Ladyfinger)",
+        "VARIETIES": [],
+        "ID": "6b5a0582-0a44-49b8-82ae-d8470a9176bb"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "Bitter Gourd",
+        "VARIETIES": [],
+        "ID": "7160538f-8616-4de8-a0c7-ef43a1449be8"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "Bottle Gourd",
+        "VARIETIES": [],
+        "ID": "c5e07340-396f-45f6-acf5-073f18172550"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "Ridge Gourd",
+        "VARIETIES": [],
+        "ID": "9c843ac9-3cc8-4007-be2c-3a06d6cb12f7"
+      },
+      {
+        "SEASON": [
+          "Zaid",
+          "Kharif"
+        ],
+        "NAME": "Tinda",
+        "VARIETIES": [],
+        "ID": "60bfb735-52b9-4d68-8c2c-a06da818171f"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Carrot",
+        "VARIETIES": [],
+        "ID": "835a0fdb-a1a1-45be-b52c-1505c864bc75"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Radish",
+        "VARIETIES": [],
+        "ID": "e99e0c85-970d-47b4-89f6-e1737c18acaf"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Beetroot",
+        "VARIETIES": [],
+        "ID": "c16e0d56-e18d-43ad-9df0-677ee4d13fa3"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Turnip",
+        "VARIETIES": [],
+        "ID": "2f74fab2-d32a-43eb-a36f-303babf29ef7"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Green Peas",
+        "VARIETIES": [],
+        "ID": "50566591-7930-4e01-a8aa-a38d6007aedb"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "French Beans",
+        "VARIETIES": [],
+        "ID": "abae887c-c8de-47e1-9f7c-9affd8bcf602"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Spinach",
+        "VARIETIES": [],
+        "ID": "10b95d86-857f-4af8-8002-5b913690a113"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Zaid"
+        ],
+        "NAME": "Amaranthus",
+        "VARIETIES": [],
+        "ID": "593851f4-8587-438d-ad7e-9a9103f16107"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Fenugreek (Methi)",
+        "VARIETIES": [],
+        "ID": "4ac418ee-9114-4c46-b18f-ff703ff9853c"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Kharif"
+        ],
+        "NAME": "Coriander",
+        "VARIETIES": [],
+        "ID": "08a289b7-6f7d-4bf6-8f89-498ebd25b285"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Capsicum (Bell Pepper)",
+        "VARIETIES": [],
+        "ID": "844bf609-4e77-4e77-bddb-e8dd0b2cc9d7"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Chilli (Green)",
+        "VARIETIES": [],
+        "ID": "3a36518b-f2bb-41c5-a099-0f1d15a2fa6f"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Garlic",
+        "VARIETIES": [],
+        "ID": "ab594e62-504b-4913-bd1d-35f0295571ec"
+      },
+      {
+        "SEASON": [
+          "Zaid",
+          "Kharif"
+        ],
+        "NAME": "Cucumber",
+        "VARIETIES": [],
+        "ID": "fc29387e-9309-4222-9e0d-fc6e2078a681"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Zaid"
+        ],
+        "NAME": "Lettuce",
+        "VARIETIES": [],
+        "ID": "2d718fba-69ab-4d35-a0bc-f2e2d7f3b710"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Knol Khol",
+        "VARIETIES": [],
+        "ID": "c31aaffe-68c6-4f1a-bd84-c467fdbfead7"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Drumstick (Moringa)",
+        "VARIETIES": [],
+        "ID": "8a7e3ac6-dfe0-4acb-a13b-0c6e1c408af6"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Parwal (Pointed Gourd)",
+        "VARIETIES": [],
+        "ID": "09984c55-48ec-45be-92b7-e9a9570ea320"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Snake Gourd",
+        "VARIETIES": [],
+        "ID": "6398efdf-3f49-4226-8bab-88874c903e93"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Spices",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Byadgi",
+          "Guntur",
+          "Teja",
+          "Kashmiri",
+          "Sannam",
+          "Mundri",
+          "Bhiwapur"
+        ],
+        "NAME": "Chilli",
+        "ID": "b3d6d2d8-2584-43a4-8f23-74b10ea6f1e6"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Panniyur-1",
+          "Karimunda",
+          "Sreekara",
+          "IISR Malabar"
+        ],
+        "NAME": "Black Pepper",
+        "ID": "40b71602-ff0d-47cb-b541-50d3ddcc8ce1"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Njallani",
+          "Vazukka",
+          "CL-685",
+          "IISR Avinash"
+        ],
+        "NAME": "Cardamom (Small)",
+        "ID": "59a6608c-bd15-460f-bc07-8dd7d176221a"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Ramla",
+          "Sawney",
+          "Golsey"
+        ],
+        "NAME": "Cardamom (Large)",
+        "ID": "da784150-9a00-4b64-ba4a-ad05ece6f2d0"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "Rio-de-Janeiro",
+          "IISR Varada",
+          "Suprabha",
+          "Maran"
+        ],
+        "NAME": "Ginger",
+        "ID": "c41cf16d-20ea-400b-9369-e06a25f4a03c"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "Lakadong",
+          "Suguna",
+          "Roma",
+          "IISR Prabha"
+        ],
+        "NAME": "Turmeric",
+        "ID": "6ae73ede-3b8e-46ff-b6c4-3e2d98ae03ec"
+      },
+      {
+        "SEASON": [
+          "Rabi",
+          "Kharif"
+        ],
+        "VARIETIES": [
+          "CO-4",
+          "Rajendra Swathi",
+          "Gujarat Coriander-2"
+        ],
+        "NAME": "Coriander",
+        "ID": "17ddb7e9-9c39-4770-aa07-b7c48fb3a6bf"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "RZ-19",
+          "GC-1",
+          "MC-43"
+        ],
+        "NAME": "Cumin",
+        "ID": "8ab76ad2-6af2-492f-ad72-421dbc634963"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "RF-125",
+          "GF-2",
+          "HF-143"
+        ],
+        "NAME": "Fennel",
+        "ID": "51b3a3f6-97a4-4690-b8f4-a470040ca0c7"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "AFG-1",
+          "HM-57",
+          "RMt-305"
+        ],
+        "NAME": "Fenugreek",
+        "ID": "a42c048b-601e-4b25-9103-1bececefef71"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Agrifound White",
+          "Yamuna Safed-3",
+          "G-282"
+        ],
+        "NAME": "Garlic",
+        "ID": "188c3025-bc33-4ba1-9538-b00f516b81cd"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "PKM-1",
+          "Urigam",
+          "Prathisthan",
+          "Dharmapuri"
+        ],
+        "NAME": "Tamarind",
+        "ID": "83ac01b2-6fb4-4760-a2f5-6375eaa54440"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Zanzibar",
+          "Kottayam Local"
+        ],
+        "NAME": "Clove",
+        "ID": "7610d420-0baa-4d43-b3ad-a87b7dfdbefc"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Konkan Swad",
+          "Vishwashree"
+        ],
+        "NAME": "Nutmeg",
+        "ID": "c9470b51-cccb-4082-9b3b-d5c15d3a5bf8"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Navasree",
+          "Sri Gemunu"
+        ],
+        "NAME": "Cinnamon",
+        "ID": "e5c35009-e4a0-43c8-8bdc-a2569404cbf5"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Iranian-type (cold arid cultivation)"
+        ],
+        "NAME": "Asafoetida (Hing)",
+        "ID": "2e32efcf-f3e9-468b-8a4a-62579a2c2b5f"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Pusa Bold",
+          "Varuna"
+        ],
+        "NAME": "Mustard Seed (as spice)",
+        "ID": "cb0064a7-bd80-4963-accc-984dccf007bc"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "AA-1",
+          "Rajasthan Ajwain-93"
+        ],
+        "NAME": "Ajwain",
+        "ID": "a8973113-624b-4538-940e-9280b335b605"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Local Dill",
+          "AJW-19"
+        ],
+        "NAME": "Dill Seed",
+        "ID": "aed6b4a8-f006-4233-b627-65122d4933f9"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "VARIETIES": [
+          "Traditional NE varieties"
+        ],
+        "NAME": "Star Anise",
+        "ID": "4b0ee3cc-625f-4bfa-8cfa-2bc808f7be61"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "VARIETIES": [
+          "Shalimar Saffron-1"
+        ],
+        "NAME": "Saffron",
+        "ID": "12da3825-41ae-47bb-a0c2-2563edd53ba3"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Plantation Crops",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Tea",
+        "VARIETIES": [],
+        "ID": "2176b016-8f5a-48d1-8eaf-fb9a766db3e0"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Coffee",
+        "VARIETIES": [],
+        "ID": "dcbed723-b992-4567-86b7-38457c15c0d1"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Coconut",
+        "VARIETIES": [],
+        "ID": "e36358ba-ee9f-4548-802a-fba65d0eaba9"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Arecanut",
+        "VARIETIES": [],
+        "ID": "7a408a7a-e93d-4e78-b46c-017ebe21e26e"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Rubber",
+        "VARIETIES": [],
+        "ID": "14d92c90-51cc-410d-b831-edad99d2d590"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Cocoa",
+        "VARIETIES": [],
+        "ID": "d81ac5d2-cd40-4829-9c53-ded96f14de7e"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Oil Palm",
+        "VARIETIES": [],
+        "ID": "340f3684-000c-4650-b5c3-b662e62f67b9"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Betel Vine",
+        "VARIETIES": [],
+        "ID": "7fced9f0-8396-40ed-85fd-445fb519f432"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Medicinal & Aromatic Plants",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Tulsi (Holy Basil)",
+        "VARIETIES": [],
+        "ID": "46ef135d-856f-49d8-b3c3-50d0580f2f76"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Ashwagandha",
+        "VARIETIES": [],
+        "ID": "eea1041b-0ab7-490a-88b8-f7636df59035"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Aloe Vera",
+        "VARIETIES": [],
+        "ID": "ee1c4724-13af-4642-be3e-44207cc4b34b"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Sarpagandha",
+        "VARIETIES": [],
+        "ID": "a70b788d-04c9-47e0-9328-defd43365923"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Shatavari",
+        "VARIETIES": [],
+        "ID": "0d6ddcea-1d39-42ef-b39d-42ec925755d8"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Safed Musli",
+        "VARIETIES": [],
+        "ID": "2b90bc40-7dea-4e65-b6a0-c1dbc0478cee"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Kalmegh (Andrographis)",
+        "VARIETIES": [],
+        "ID": "f058e74e-bb2e-4d2e-9781-904ba9c96ade"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Summer"
+        ],
+        "NAME": "Brahmi",
+        "VARIETIES": [],
+        "ID": "00640868-f620-4d2f-abbb-07efb8d8fc20"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Summer"
+        ],
+        "NAME": "Lemongrass",
+        "VARIETIES": [],
+        "ID": "1d16f653-a367-4508-879b-fdf4fee7f392"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Citronella",
+        "VARIETIES": [],
+        "ID": "090ac41d-680d-432c-a85e-3aa7a859ded8"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Mentha (Mint)",
+        "VARIETIES": [],
+        "ID": "833d77b6-738b-482b-8ee3-ea1d86d2fe97"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Senna",
+        "VARIETIES": [],
+        "ID": "1c47b9e1-b238-403e-a406-58ca869bc4a2"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Stevia",
+        "VARIETIES": [],
+        "ID": "5e6ccc56-8c56-4e2f-af37-c5c79c766009"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Isabgol (Psyllium)",
+        "VARIETIES": [],
+        "ID": "55fe1c2f-058f-447d-8633-5a97ee486d28"
+      }
+    ]
+  },
+  {
+    "CATEGORY": "Fibre Crops",
+    "CROPS": [
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Cotton",
+        "VARIETIES": [],
+        "ID": "b8600953-3c54-4ffc-8a84-41920ecc668b"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Jute",
+        "VARIETIES": [],
+        "ID": "13f1cebf-3ce7-473b-983a-08fdbc865e77"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Mesta",
+        "VARIETIES": [],
+        "ID": "5959061a-c6cb-4e26-a0c7-b0de119f3991"
+      },
+      {
+        "SEASON": [
+          "Kharif",
+          "Rabi"
+        ],
+        "NAME": "Sunhemp",
+        "VARIETIES": [],
+        "ID": "04627c40-b606-4723-83fa-49303220b661"
+      },
+      {
+        "SEASON": [
+          "Rabi"
+        ],
+        "NAME": "Flax (Linseed - dual purpose)",
+        "VARIETIES": [],
+        "ID": "e4505b8d-586c-4bea-820e-95ee0f0bca9a"
+      },
+      {
+        "SEASON": [
+          "Kharif"
+        ],
+        "NAME": "Ramie",
+        "VARIETIES": [],
+        "ID": "c261dd51-bf5b-4170-8318-6dc9a4ceb388"
+      },
+      {
+        "SEASON": [
+          "Perennial"
+        ],
+        "NAME": "Coir (from Coconut)",
+        "VARIETIES": [],
+        "ID": "dab0fea1-8886-4471-8c5d-3d2c53a45175"
+      }
+    ]
+  }
+]

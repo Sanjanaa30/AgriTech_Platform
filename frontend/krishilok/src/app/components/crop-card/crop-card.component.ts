@@ -1,10 +1,10 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
+import { FormsModule } from '@angular/forms'; // ✅ Add this
 @Component({
   selector: 'app-crop-card',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './crop-card.component.html',
   styleUrls: ['./crop-card.component.css']
 })
@@ -13,27 +13,51 @@ export class CropCardComponent {
 
   @Output() edit = new EventEmitter<any>();
   @Output() statusUpdate = new EventEmitter<any>();
-  @Output() viewMore = new EventEmitter<any>(); // 🔁 You can keep this if backend triggers needed later
   @Output() delete = new EventEmitter<any>();
 
   // 🌟 UI-only modal toggle for "More Details"
-  showDetails = false;
+  showDetailsModal = false;
 
-  onEdit() {
+  toggleDetailsModal(): void {
+    this.showDetailsModal = !this.showDetailsModal;
+  }
+
+  onEdit(): void {
     this.edit.emit(this.crop);
   }
 
-  onStatusUpdate() {
+  onStatusUpdate(): void {
     this.statusUpdate.emit(this.crop);
   }
 
-  // ✅ Show modal for now (UI only)
-  onViewMore() {
-    this.showDetails = true;
-    // this.viewMore.emit(this.crop); // ❌ disable this if modal is standalone
-  }
-
-  onDelete() {
+  onDelete(): void {
     this.delete.emit(this.crop);
   }
+
+  onViewMore(): void {
+    this.toggleDetailsModal(); // ✅ clean toggle
+  }
+  getTimeSinceSowed(): number {
+    if (!this.crop?.sowingDate) return 0;
+    const sowingDate = new Date(this.crop.sowingDate);
+    const today = new Date();
+    const diffTime = today.getTime() - sowingDate.getTime();
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  }
+
+  newNote: string = '';
+
+  addNote() {
+    if (this.newNote.trim()) {
+      const dateStr = new Date().toLocaleDateString(); // e.g., 18/07/2025
+      const formattedNote = `${this.newNote.trim()} (on ${dateStr})`;
+
+      this.crop.notesHistory = this.crop.notesHistory || [];
+      this.crop.notesHistory.unshift(formattedNote);
+
+      this.crop.lastActivity = formattedNote; // ✅ update with timestamped note
+      this.newNote = '';
+    }
+  }
+
 }
