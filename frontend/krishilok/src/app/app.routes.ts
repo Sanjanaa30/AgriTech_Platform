@@ -33,7 +33,8 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [ConfirmExitGuard], // ✅ Add this line
     children: [
-      { path: '', component: FarmerOverviewComponent }, // new
+      { path: '', redirectTo: 'home', pathMatch: 'full' }, // 👈 redirect base
+      { path: 'home', component: FarmerOverviewComponent }, // 👈 explicit Home
       { path: ':section', component: FarmerSectionComponent },
       // { path: 'field-images', component: FieldImagesComponent },
       // { path: 'marketplace', component: MarketplaceComponent },

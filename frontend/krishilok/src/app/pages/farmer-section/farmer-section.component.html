@@ -2,20 +2,27 @@
     <!-- Header + Filter + Sort -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <!-- Add Crop Button -->
-        <button (click)="showAddCropModal = true" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
-            ➕ Add Crop
-        </button>
+        <button (click)="showAddCropModal = true"
+            class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded hover:bg-green-"> Add
+            Crop </button>
 
-        <!-- Add Crop Modal -->
+
         <!-- Add Crop Modal -->
         <div *ngIf="showAddCropModal"
             class="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
             <div class="bg-white w-[95%] md:w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl relative">
 
-                <button (click)="showAddCropModal = false"
-                    class="absolute top-2 right-3 text-gray-600 hover:text-red-600 text-lg">✖</button>
-
-                <h2 class="text-xl font-semibold text-gray-800 mb-4">🌱 Add New Crop</h2>
+                <!-- Header Row -->
+                <div class="flex items-start justify-between mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
+                        🌱 Add New Crop
+                    </h2>
+                    <button (click)="closeAddCropModal()"
+                        class="text-xl text-purple-500 hover:text-purple-700 transition duration-200"
+                        aria-label="Close">
+                        ✖
+                    </button>
+                </div>
 
                 <!-- Section A: Basic Info -->
                 <div class="space-y-4">
@@ -73,11 +80,42 @@
                     </div>
 
                     <!-- Image Upload -->
+                    <!-- Crop Image -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🖼️ Crop Image</label>
-                        <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.imageUrl"
-                            placeholder="Enter image URL for now" />
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload Photos</label>
+
+                        <div class="w-full border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer bg-gray-50 hover:border-green-500 transition"
+                            (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
+                            [class.border-green-500]="isDragOver" (click)="imageInput.click()">
+
+                            <div class="flex flex-col items-center justify-center gap-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M4 12l1.41-1.41M12 4v8m0 0l-3.59-3.59M12 12l3.59-3.59" />
+                                </svg>
+
+                                <p class="font-semibold text-gray-700">Upload a File</p>
+                                <p class="text-sm text-gray-500">Drag and drop files here</p>
+                            </div>
+
+                            <input #imageInput type="file" (change)="onImageSelected($event)" accept="image/*" hidden />
+                        </div>
+
+                        <!-- Optional Preview -->
+                        <div *ngIf="imagePreview" class="mt-4 text-center">
+                            <img [src]="imagePreview" class="mx-auto max-h-40 rounded shadow" />
+
+                            <!-- Add this button below the image -->
+                            <button type="button" (click)="clearImage()"
+                                class="mt-2 text-sm text-red-600 hover:underline focus:outline-none">
+                                ✖ Remove Image
+                            </button>
+                        </div>
+
+
                     </div>
+
 
                     <!-- Status -->
                     <div>
@@ -151,23 +189,41 @@
         <!-- Filter + Sort Controls -->
         <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             <!-- Filter by Status -->
-            <select [(ngModel)]="filterStatus"
-                class="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-auto">
-                <option value="">Filter by Status</option>
-                <option value="Sowing">Sowing</option>
-                <option value="Growing">Growing</option>
-                <option value="Harvesting">Harvesting</option>
-                <option value="Ready for Market">Ready for Market</option>
-            </select>
+            <div class="relative w-full sm:w-48">
+                <select [(ngModel)]="filterStatus"
+                    class="w-full appearance-none border border-gray-300 text-sm px-3 py-2 pr-8 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <option value="">Filter by Status</option>
+                    <option value="Sowing">Sowing</option>
+                    <option value="Growing">Growing</option>
+                    <option value="Harvesting">Harvesting</option>
+                    <option value="Ready for Market">Ready for Market</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
 
             <!-- Sort By -->
-            <select [(ngModel)]="sortBy" class="border border-gray-300 rounded px-3 py-2 text-sm w-full sm:w-auto">
-                <option value="">Sort by</option>
-                <option value="name">Name</option>
-                <option value="sowingDate">Sowing Date</option>
-                <option value="harvestDate">Harvest Date</option>
-            </select>
+            <div class="relative w-full sm:w-48">
+                <select [(ngModel)]="sortBy"
+                    class="w-full appearance-none border border-gray-300 text-sm px-3 py-2 pr-8 rounded-lg bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500">
+                    <option value="">Sort by</option>
+                    <option value="name">Name</option>
+                    <option value="sowingDate">Sowing Date</option>
+                    <option value="harvestDate">Harvest Date</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center text-gray-500">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </div>
+            </div>
         </div>
+
+
+
     </div>
 
     <!-- Crop Cards -->
@@ -176,6 +232,14 @@
             (viewMore)="viewMoreDetails($event)" (delete)="deleteCrop($event)">
         </app-crop-card>
     </div>
+</div>
+
+<div *ngIf="section === 'field-images'" class="p-6 text-gray-800">
+    <!-- Header + Upload + Filter -->
+    <app-field-section-card [fieldImages]="fieldImages" (view)="viewFieldImage($event)"
+        (delete)="deleteFieldImage($event)">
+    </app-field-section-card>
+
 </div>
 
 <div *ngIf="section === 'ai-insights'">
