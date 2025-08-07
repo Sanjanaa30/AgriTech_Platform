@@ -2,52 +2,46 @@
     <!-- Header + Filter + Sort -->
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-4">
         <!-- Add Crop Button -->
-        <button (click)="showAddCropModal = true"
-            class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded hover:bg-green-"> Add
+        <button (click)="openAddCropModal()" class="bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded"> Add
             Crop </button>
 
-
-        <!-- Add Crop Modal -->
+        <!-- Add/Edit Crop Modal -->
         <div *ngIf="showAddCropModal"
             class="fixed inset-0 z-50 bg-black bg-opacity-40 flex justify-center items-center">
             <div class="bg-white w-[95%] md:w-[600px] max-h-[90vh] overflow-y-auto p-6 rounded-lg shadow-xl relative">
 
-                <!-- Header Row -->
-                <div class="flex items-start justify-between mb-4">
-                    <h2 class="text-xl font-semibold text-gray-800 flex items-center gap-2">
-                        🌱 Add New Crop
+                <!-- Header -->
+                <div class="flex justify-between items-start mb-4">
+                    <h2 class="text-xl font-semibold text-gray-800">
+                        {{ isEditing ? '✏️ Edit Crop' : '🌱 Add New Crop' }}
                     </h2>
                     <button (click)="closeAddCropModal()"
-                        class="text-xl text-purple-500 hover:text-purple-700 transition duration-200"
-                        aria-label="Close">
-                        ✖
-                    </button>
+                        class="text-xl text-purple-500 hover:text-purple-700">✖</button>
                 </div>
 
-                <!-- Section A: Basic Info -->
+                <!-- Form Fields -->
                 <div class="space-y-4">
-
-                    <!-- Category Dropdown -->
+                    <!-- Category -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">📂 Category *</label>
-                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.category"
+                        <label class="text-sm font-medium text-gray-700">📂 Category *</label>
+                        <select [(ngModel)]="newCrop.category" class="w-full mt-1 p-2 border rounded"
                             (change)="onCategoryChange()">
                             <option value="">Select Category</option>
                             <option *ngFor="let cat of categories">{{ cat }}</option>
                         </select>
                     </div>
 
-                    <!-- Crop Dropdown -->
+                    <!-- Crop Name -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🌾 Crop Name *</label>
-                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.name"
+                        <label class="text-sm font-medium text-gray-700">🌾 Crop Name *</label>
+                        <select [(ngModel)]="newCrop.name" class="w-full mt-1 p-2 border rounded"
                             (change)="onCropChange()">
                             <option value="">Select Crop</option>
                             <option *ngFor="let crop of cropOptions">{{ crop.NAME }}</option>
                         </select>
                     </div>
 
-                    <!-- Season Badge -->
+                    <!-- Season -->
                     <div *ngIf="seasonBadge" class="mt-1">
                         <span class="inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded">
                             🏷️ {{ seasonBadge }}
@@ -56,7 +50,7 @@
 
                     <!-- Variety -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🔤 Variety</label>
+                        <label class="text-sm font-medium text-gray-700">🔤 Variety</label>
                         <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.variety">
                             <option value="">Select or type manually</option>
                             <option *ngFor="let v of varietyOptions">{{ v }}</option>
@@ -65,82 +59,71 @@
                             [(ngModel)]="newCrop.variety" placeholder="e.g., Roma, Basmati 1121" />
                     </div>
 
-                    <!-- Sowing & Harvest Date -->
+                    <!-- Dates -->
                     <div class="flex flex-col md:flex-row md:space-x-4">
                         <div class="flex-1">
-                            <label class="block text-sm font-medium text-gray-700">📅 Sowing Date *</label>
+                            <label class="text-sm font-medium text-gray-700">📅 Sowing Date *</label>
                             <input type="date" class="w-full mt-1 p-2 border rounded"
                                 [(ngModel)]="newCrop.sowingDate" />
                         </div>
                         <div class="flex-1 mt-4 md:mt-0">
-                            <label class="block text-sm font-medium text-gray-700">📆 Expected Harvest *</label>
+                            <label class="text-sm font-medium text-gray-700">📆 Expected Harvest *</label>
                             <input type="date" class="w-full mt-1 p-2 border rounded"
                                 [(ngModel)]="newCrop.harvestDate" />
                         </div>
                     </div>
 
                     <!-- Image Upload -->
-                    <!-- Crop Image -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">Upload Photos</label>
-
+                        <label class="text-sm font-medium text-gray-700 mb-2">Upload Photos</label>
                         <div class="w-full border-2 border-dashed border-gray-300 rounded-md p-6 text-center cursor-pointer bg-gray-50 hover:border-green-500 transition"
                             (drop)="onDrop($event)" (dragover)="onDragOver($event)" (dragleave)="onDragLeave($event)"
-                            [class.border-green-500]="isDragOver" (click)="imageInput.click()">
-
+                            [class.border-green-500]="isDragOver" (click)="imageInputRef.nativeElement.click()">
                             <div class="flex flex-col items-center justify-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-gray-400" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M4 16v1a2 2 0 002 2h12a2 2 0 002-2v-1M4 12l1.41-1.41M12 4v8m0 0l-3.59-3.59M12 12l3.59-3.59" />
                                 </svg>
-
                                 <p class="font-semibold text-gray-700">Upload a File</p>
                                 <p class="text-sm text-gray-500">Drag and drop files here</p>
                             </div>
-
                             <input #imageInput type="file" (change)="onImageSelected($event)" accept="image/*" hidden />
+
                         </div>
 
-                        <!-- Optional Preview -->
+                        <!-- Preview -->
                         <div *ngIf="imagePreview" class="mt-4 text-center">
                             <img [src]="imagePreview" class="mx-auto max-h-40 rounded shadow" />
-
-                            <!-- Add this button below the image -->
                             <button type="button" (click)="clearImage()"
-                                class="mt-2 text-sm text-red-600 hover:underline focus:outline-none">
-                                ✖ Remove Image
-                            </button>
+                                class="mt-2 text-sm text-red-600 hover:underline">✖ Remove Image</button>
                         </div>
-
-
                     </div>
-
 
                     <!-- Status -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">⚙️ Status *</label>
-                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.status">
+                        <label class="text-sm font-medium text-gray-700">⚙️ Status *</label>
+                        <select [(ngModel)]="newCrop.status" class="w-full mt-1 p-2 border rounded">
                             <option value="">Select Status</option>
                             <option>Sowing</option>
                             <option>Growing</option>
                             <option>Harvesting</option>
                             <option>Ready for Market</option>
+                            <option>Diseased</option>
+                            <option>Irrigation Needed</option>
                         </select>
                     </div>
-                </div>
 
-                <!-- Section B: Additional Info -->
-                <hr class="my-6" />
-                <div class="space-y-4">
+                    <!-- Area -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">📐 Area (acres) *</label>
+                        <label class="text-sm font-medium text-gray-700">📐 Area (acres)</label>
                         <input type="number" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.area" />
                     </div>
 
+                    <!-- Irrigation Type -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">💧 Irrigation Type *</label>
-                        <select class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.irrigationType">
+                        <label class="text-sm font-medium text-gray-700">💧 Irrigation Type</label>
+                        <select [(ngModel)]="newCrop.irrigationType" class="w-full mt-1 p-2 border rounded">
                             <option value="">Select Type</option>
                             <option>Drip</option>
                             <option>Sprinkler</option>
@@ -148,27 +131,16 @@
                         </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">🧠 AI Health Score</label>
-                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" value="82 (Auto)"
-                                disabled />
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700">🛒 Listed for Sale?</label>
-                            <input type="text" class="w-full mt-1 p-2 border rounded bg-gray-100" value="Yes"
-                                disabled />
-                        </div>
-                    </div>
-
+                    <!-- Last Activity -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🗒️ Last Activity</label>
+                        <label class="text-sm font-medium text-gray-700">🗒️ Last Activity</label>
                         <input type="text" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.lastActivity"
                             placeholder="e.g., Fertilizer applied" />
                     </div>
 
+                    <!-- Notes -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">🧾 Notes History</label>
+                        <label class="text-sm font-medium text-gray-700">🧾 Notes History</label>
                         <textarea rows="3" class="w-full mt-1 p-2 border rounded" [(ngModel)]="newCrop.notes"
                             placeholder="Write notes..."></textarea>
                     </div>
@@ -178,15 +150,12 @@
                 <div class="mt-6 text-right">
                     <button (click)="saveNewCrop()"
                         class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
-                        ✅ Save Crop
+                        ✅ {{ isEditing ? 'Update' : 'Save' }} Crop
                     </button>
                 </div>
             </div>
         </div>
 
-
-
-        <!-- Filter + Sort Controls -->
         <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
             <!-- Filter by Status -->
             <div class="relative w-full sm:w-48">
@@ -249,5 +218,3 @@
 <div *ngIf="section === 'marketplace'">
     <!-- Marketplace content -->
 </div>
-
-<!-- and so on -->

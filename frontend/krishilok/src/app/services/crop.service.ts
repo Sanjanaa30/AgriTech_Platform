@@ -9,12 +9,13 @@ import { Observable } from 'rxjs';
 export class CropService {
   private apiUrl = 'http://localhost:5000/api/crops';  // Adjust if deployed
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // 🌱 Add a new crop
-  addCrop(cropData: any): Observable<any> {
-    return this.http.post(this.apiUrl, cropData, { withCredentials: true });
+  addCrop(cropData: any) {
+    return this.http.post('/api/crops', cropData, { withCredentials: true });
   }
+
 
   // 📋 Get all crops for logged-in user
   getCrops(): Observable<any[]> {
@@ -22,9 +23,10 @@ export class CropService {
   }
 
   // ✏️ Update crop by ID
-  updateCrop(id: string, updatedData: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, updatedData, { withCredentials: true });
+  updateCrop(id: string, crop: any): Observable<any> {
+    return this.http.put(`/api/crops/${id}`, crop, { withCredentials: true });
   }
+
 
   // 🗑️ Delete crop by ID
   deleteCrop(id: string): Observable<any> {

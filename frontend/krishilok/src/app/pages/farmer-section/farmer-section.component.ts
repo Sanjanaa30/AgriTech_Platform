@@ -6,6 +6,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { CropCardComponent } from '../../components/crop-card/crop-card.component';
 import { FieldSectionCardComponent } from '../../components/field-section-card/field-section-card.component';
 import { CropService } from '../../services/crop.service';
+import { ViewChild, ElementRef } from '@angular/core';
 
 interface FieldImage {
   image: string;
@@ -29,9 +30,12 @@ interface FieldImage {
   styleUrls: ['./farmer-section.component.css']
 })
 export class FarmerSectionComponent implements OnInit {
+  @ViewChild('imageInput') imageInputRef!: ElementRef<HTMLInputElement>;
   section: string = '';
   showAddCropModal = false;
-  showUploadModal = false;
+  isEditing = false;
+  currentEditingCropId: string | null = null;
+
   filterStatus = '';
   sortBy = '';
   cropData: any[] = [];
@@ -44,35 +48,6 @@ export class FarmerSectionComponent implements OnInit {
   selectedImageFile: File | null = null;
   imagePreview: string | null = null;
   isDragOver: boolean = false;
-
-  get filteredCrops(): any[] {
-    let result = [...this.crops];
-    if (this.filterStatus) {
-      result = result.filter(crop => crop.status === this.filterStatus);
-    }
-    return this.sortCrops(result);
-  }
-
-  sortCrops(crops: any[]): any[] {
-    if (this.sortBy === 'name') {
-      return crops.sort((a, b) => a.name?.localeCompare(b.name));
-    } else if (this.sortBy === 'sowingDate') {
-      return crops.sort((a, b) => new Date(a.sowingDate).getTime() - new Date(b.sowingDate).getTime());
-    } else if (this.sortBy === 'harvestDate') {
-      return crops.sort((a, b) => new Date(a.harvestDate).getTime() - new Date(b.harvestDate).getTime());
-    }
-    return crops;
-  }
-
-  clearImage(): void {
-    this.selectedImageFile = null;
-    this.imagePreview = null;
-  }
-
-  closeAddCropModal(): void {
-    this.showAddCropModal = false;
-    this.resetForm();
-  }
 
   newCrop: any = {
     name: '',
@@ -92,41 +67,6 @@ export class FarmerSectionComponent implements OnInit {
     timeSinceSowed: 0,
     notesHistory: []
   };
-
-  newFieldImage: FieldImage = {
-    image: '',
-    title: '',
-    date: '',
-    status: '',
-    statusColor: ''
-  };
-
-  fieldFilterStatus = '';
-  filteredFieldImages: FieldImage[] = [];
-
-  fieldImages: FieldImage[] = [
-    {
-      image: 'https://via.placeholder.com/400x250.png?text=Rice+Field',
-      title: 'Rice Field - East Zone',
-      date: '2025-07-16',
-      status: 'Healthy',
-      statusColor: 'bg-green-600'
-    },
-    {
-      image: 'https://via.placeholder.com/400x250.png?text=Maize+Patch',
-      title: 'Maize Patch - South',
-      date: '2025-07-15',
-      status: 'Weeds Detected',
-      statusColor: 'bg-red-600'
-    },
-    {
-      image: 'https://via.placeholder.com/400x250.png?text=Wheat+Field',
-      title: 'Wheat Field - North',
-      date: '2025-07-14',
-      status: 'Irrigation Needed',
-      statusColor: 'bg-yellow-500'
-    }
-  ];
 
   constructor(
     private route: ActivatedRoute,
@@ -152,6 +92,42 @@ export class FarmerSectionComponent implements OnInit {
     });
   }
 
+  get filteredCrops(): any[] {
+    let result = [...this.crops];
+    if (this.filterStatus) {
+      result = result.filter(crop => crop.status === this.filterStatus);
+    }
+    return this.sortCrops(result);
+  }
+
+  sortCrops(crops: any[]): any[] {
+    if (this.sortBy === 'name') {
+      return crops.sort((a, b) => a.name?.localeCompare(b.name));
+    } else if (this.sortBy === 'sowingDate') {
+      return crops.sort((a, b) => new Date(a.sowingDate).getTime() - new Date(b.sowingDate).getTime());
+    } else if (this.sortBy === 'harvestDate') {
+      return crops.sort((a, b) => new Date(a.harvestDate).getTime() - new Date(b.harvestDate).getTime());
+    }
+    return crops;
+  }
+
+  openAddCropModal() {
+    this.showAddCropModal = true;
+    this.isEditing = false;
+    this.currentEditingCropId = null;
+    this.resetForm();
+  }
+
+  closeAddCropModal(): void {
+    this.showAddCropModal = false;
+    this.resetForm();
+  }
+
+  clearImage(): void {
+    this.selectedImageFile = null;
+    this.imagePreview = null;
+  }
+
   onCategoryChange() {
     const selected = this.cropData.find(c => c.CATEGORY === this.newCrop.category);
     this.cropOptions = selected?.CROPS || [];
@@ -162,7 +138,12 @@ export class FarmerSectionComponent implements OnInit {
 
   onCropChange() {
     const crop = this.cropOptions.find(c => c.NAME === this.newCrop.name);
-    this.seasonBadge = crop?.SEASON?.[0] || '';
+
+    if (crop?.SEASON?.length) {
+      this.seasonBadge = crop.SEASON[0];
+      this.newCrop.season = crop.SEASON[0];
+    }
+
     if (Array.isArray(crop?.VARIETIES)) {
       this.varietyOptions = crop.VARIETIES;
     } else if (typeof crop?.VARIETIES === 'object') {
@@ -172,17 +153,19 @@ export class FarmerSectionComponent implements OnInit {
     }
   }
 
-  onImageSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.selectedImageFile = file;
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.imagePreview = reader.result as string;
-      };
-      reader.readAsDataURL(file);
-    }
+onImageSelected(event: Event): void {
+  const input = event.target as HTMLInputElement;
+  const file = input?.files?.[0];
+  if (file) {
+    this.selectedImageFile = file;  // ✅ This is the missing line
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
   }
+}
+
 
   onDragOver(event: DragEvent) {
     event.preventDefault();
@@ -209,6 +192,9 @@ export class FarmerSectionComponent implements OnInit {
   }
 
   saveNewCrop() {
+    console.log('Saving new crop...');
+    console.log('Selected file:', this.selectedImageFile);
+
     if (!this.newCrop.name || !this.newCrop.sowingDate || !this.newCrop.harvestDate || !this.newCrop.status) {
       alert('Please fill all required fields.');
       return;
@@ -218,38 +204,58 @@ export class FarmerSectionComponent implements OnInit {
       const formData = new FormData();
       formData.append('image', this.selectedImageFile);
 
+      console.log('Uploading image to server...');
+
       this.http.post<{ imageUrl: string }>('http://localhost:5000/api/uploads/crop-image', formData, {
         withCredentials: true
       }).subscribe({
-        next: (res) => this.submitCropWithImage(res.imageUrl),
+        next: (res) => {
+          console.log('Image upload success:', res);
+          this.submitCropWithImage(res.imageUrl);
+        },
         error: (err) => {
           console.error('Image upload failed:', err.message);
           alert('Image upload failed. Please try again.');
         }
       });
     } else {
+      console.warn('No image selected, skipping upload.');
       this.submitCropWithImage();
     }
   }
 
   submitCropWithImage(imageUrl?: string) {
-    const cropToAdd = {
+    const updatedCrop = {
       ...this.newCrop,
-      imageUrl: imageUrl || 'https://via.placeholder.com/150',
+      season: this.seasonBadge || this.newCrop.season,
+      imageUrl: imageUrl || this.newCrop.imageUrl || 'https://via.placeholder.com/150',
       timeSinceSowed: this.getTimeSinceSowed(this.newCrop.sowingDate)
     };
 
-    this.cropService.addCrop(cropToAdd).subscribe({
-      next: (savedCrop) => {
-        this.crops.unshift(savedCrop);
-        this.resetForm();
-        this.showAddCropModal = false;
-      },
-      error: (err) => {
-        console.error('Failed to save crop:', err.message);
-        alert('Error saving crop. Please try again.');
-      }
-    });
+    if (this.isEditing && this.currentEditingCropId) {
+      this.cropService.updateCrop(this.currentEditingCropId, updatedCrop).subscribe({
+        next: (updated) => {
+          const index = this.crops.findIndex(c => c._id === this.currentEditingCropId);
+          if (index !== -1) this.crops[index] = updated;
+          this.closeAddCropModal();
+        },
+        error: (err) => {
+          console.error('Error updating crop:', err.message);
+          alert('Failed to update crop.');
+        }
+      });
+    } else {
+      this.cropService.addCrop(updatedCrop).subscribe({
+        next: (savedCrop) => {
+          this.crops.unshift(savedCrop);
+          this.closeAddCropModal();
+        },
+        error: (err) => {
+          console.error('Failed to save crop:', err.message);
+          alert('Error saving crop. Please try again.');
+        }
+      });
+    }
   }
 
   resetForm() {
@@ -277,6 +283,7 @@ export class FarmerSectionComponent implements OnInit {
     this.selectedImageFile = null;
     this.imagePreview = null;
     this.isDragOver = false;
+    this.currentEditingCropId = null;
   }
 
   getTimeSinceSowed(dateStr: string): number {
@@ -287,7 +294,26 @@ export class FarmerSectionComponent implements OnInit {
   }
 
   editCrop(crop: any) {
-    alert('Edit crop: ' + crop.name);
+    this.isEditing = true;
+    this.currentEditingCropId = crop._id;
+    this.newCrop = { ...crop };
+
+    const selectedCategory = this.cropData.find(c => c.CATEGORY === crop.category);
+    this.cropOptions = selectedCategory?.CROPS || [];
+
+    const selectedCrop = this.cropOptions.find(c => c.NAME === crop.name);
+    this.seasonBadge = crop.season;
+
+    if (Array.isArray(selectedCrop?.VARIETIES)) {
+      this.varietyOptions = selectedCrop.VARIETIES;
+    } else if (typeof selectedCrop?.VARIETIES === 'object') {
+      this.varietyOptions = Object.values(selectedCrop.VARIETIES).flat() as string[];
+    } else {
+      this.varietyOptions = [];
+    }
+
+    this.imagePreview = crop.imageUrl;
+    this.showAddCropModal = true;
   }
 
   deleteCrop(crop: any) {
@@ -312,37 +338,29 @@ export class FarmerSectionComponent implements OnInit {
     alert('Show details for: ' + crop.name);
   }
 
-  saveFieldImage() {
-    this.fieldImages.push({
-      ...this.newFieldImage,
-      statusColor: this.getStatusColor(this.newFieldImage.status),
-    });
-    this.showUploadModal = false;
-    this.filterFieldImages();
-    this.newFieldImage = { image: '', title: '', date: '', status: '', statusColor: '' };
-  }
-
-  filterFieldImages() {
-    this.filteredFieldImages = this.fieldFilterStatus
-      ? this.fieldImages.filter(f => f.status === this.fieldFilterStatus)
-      : this.fieldImages;
-  }
-
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'Healthy': return 'bg-green-600';
-      case 'Weeds Detected': return 'bg-red-600';
-      case 'Irrigation Needed': return 'bg-yellow-500';
-      default: return 'bg-gray-500';
+  // FIELD IMAGES SECTION
+  fieldImages: FieldImage[] = [
+    {
+      image: 'https://via.placeholder.com/400x250.png?text=Field+1',
+      title: 'Rice Field - North',
+      date: '2025-07-01',
+      status: 'Healthy',
+      statusColor: 'bg-green-600'
+    },
+    {
+      image: 'https://via.placeholder.com/400x250.png?text=Field+2',
+      title: 'Maize Patch - South',
+      date: '2025-07-02',
+      status: 'Weeds Detected',
+      statusColor: 'bg-red-600'
     }
+  ];
+
+  viewFieldImage(field: FieldImage) {
+    alert(`Viewing: ${field.title}`);
   }
 
   deleteFieldImage(fieldToDelete: FieldImage) {
     this.fieldImages = this.fieldImages.filter(f => f !== fieldToDelete);
-    this.filterFieldImages();
-  }
-
-  viewFieldImage(field: FieldImage) {
-    alert(`Viewing: ${field.title}`);
   }
 }

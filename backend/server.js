@@ -12,6 +12,8 @@ const refreshRoutes = require('./routes/refreshRoutes');
 const logoutRoutes = require('./routes/logoutRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cropRoutes = require('./routes/cropRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
+const path = require('path'); // ✅ Added this
 
 
 const app = express();
@@ -39,6 +41,8 @@ app.use('/api/auth', logoutRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/crops', cropRoutes);
+app.use('/api/uploads', uploadRoutes);
+app.use('/uploads/crops', express.static(path.join(__dirname, 'uploads/crops')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));

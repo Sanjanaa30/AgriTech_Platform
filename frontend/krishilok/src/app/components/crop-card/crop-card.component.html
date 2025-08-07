@@ -38,8 +38,8 @@
 
         <!-- Dates Section -->
         <div class="mt-3 text-sm text-gray-700 space-y-1">
-            <p>📅 <strong>Sowing Date:</strong> {{ crop.sowingDate }}</p>
-            <p>📆 <strong>Expected Harvest:</strong> {{ crop.expectedHarvestDate }}</p>
+            <p>📅 <strong>Sowing Date:</strong> {{ crop.sowingDate | date: 'yyyy-MM-dd' }}</p>
+            <p>📆 <strong>Expected Harvest:</strong> {{ crop.harvestDate | date: 'yyyy-MM-dd' }}</p>
         </div>
 
         <!-- Action Buttons -->
