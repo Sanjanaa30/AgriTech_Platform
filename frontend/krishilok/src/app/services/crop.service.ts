@@ -32,4 +32,12 @@ export class CropService {
   deleteCrop(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`, { withCredentials: true });
   }
+
+  // 🗑️ Remove crop image only
+  removeCropImage(id: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${id}/image`, { withCredentials: true });
+  }
+
 }
+
+

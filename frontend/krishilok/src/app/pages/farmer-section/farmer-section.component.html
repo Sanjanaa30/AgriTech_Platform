@@ -93,11 +93,13 @@
                         </div>
 
                         <!-- Preview -->
-                        <div *ngIf="imagePreview" class="mt-4 text-center">
-                            <img [src]="imagePreview" class="mx-auto max-h-40 rounded shadow" />
-                            <button type="button" (click)="clearImage()"
-                                class="mt-2 text-sm text-red-600 hover:underline">✖ Remove Image</button>
+                        <div *ngIf="imagePreview" class="mt-2">
+                            <img [src]="imagePreview" alt="Crop Image" class="w-32 h-32 object-cover rounded" />
+                            <button type="button" (click)="removeImage()" class="text-red-600 hover:underline mt-1">
+                                ✖ Remove Image
+                            </button>
                         </div>
+
                     </div>
 
                     <!-- Status -->

@@ -48,6 +48,7 @@ export class FarmerSectionComponent implements OnInit {
   selectedImageFile: File | null = null;
   imagePreview: string | null = null;
   isDragOver: boolean = false;
+  imageRemoved = false
 
   newCrop: any = {
     name: '',
@@ -115,9 +116,9 @@ export class FarmerSectionComponent implements OnInit {
     this.showAddCropModal = true;
     this.isEditing = false;
     this.currentEditingCropId = null;
+    this.imageRemoved = false;   // ✅
     this.resetForm();
   }
-
   closeAddCropModal(): void {
     this.showAddCropModal = false;
     this.resetForm();
@@ -153,18 +154,36 @@ export class FarmerSectionComponent implements OnInit {
     }
   }
 
-onImageSelected(event: Event): void {
-  const input = event.target as HTMLInputElement;
-  const file = input?.files?.[0];
-  if (file) {
-    this.selectedImageFile = file;  // ✅ This is the missing line
-    const reader = new FileReader();
-    reader.onload = () => {
-      this.imagePreview = reader.result as string;
-    };
-    reader.readAsDataURL(file);
+  // onImageSelected(event: Event): void {
+  //   const input = event.target as HTMLInputElement;
+  //   const file = input?.files?.[0];
+  //   if (file) {
+  //     this.selectedImageFile = file;  // ✅ This is the missing line
+  //     const reader = new FileReader();
+  //     reader.onload = () => {
+  //       this.imagePreview = reader.result as string;
+  //     };
+  //     reader.readAsDataURL(file);
+  //   }
+  // }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input?.files?.[0];
+
+    if (file) {
+      this.selectedImageFile = file;
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+      };
+      reader.readAsDataURL(file);
+      this.imageRemoved = false;
+    }
   }
-}
+
+
+
 
 
   onDragOver(event: DragEvent) {
@@ -191,52 +210,142 @@ onImageSelected(event: Event): void {
     }
   }
 
-  saveNewCrop() {
-    console.log('Saving new crop...');
-    console.log('Selected file:', this.selectedImageFile);
+  // saveNewCrop() {
+  //   console.log('Saving new crop...');
+  //   console.log('Selected file:', this.selectedImageFile);
 
+  //   if (!this.newCrop.name || !this.newCrop.sowingDate || !this.newCrop.harvestDate || !this.newCrop.status) {
+  //     alert('Please fill all required fields.');
+  //     return;
+  //   }
+
+  //   if (this.selectedImageFile) {
+  //     const formData = new FormData();
+  //     formData.append('image', this.selectedImageFile);
+
+  //     console.log('Uploading image to server...');
+
+  //     this.http.post<{ imageUrl: string }>('http://localhost:5000/api/uploads/crop-image', formData, {
+  //       withCredentials: true
+  //     }).subscribe({
+  //       next: (res) => {
+  //         console.log('Image upload success:', res);
+  //         this.submitCropWithImage(res.imageUrl);
+  //       },
+  //       error: (err) => {
+  //         console.error('Image upload failed:', err.message);
+  //         alert('Image upload failed. Please try again.');
+  //       }
+  //     });
+  //   } else {
+  //     console.warn('No image selected, skipping upload.');
+  //     this.submitCropWithImage();
+  //   }
+  // }
+
+  saveNewCrop() {
     if (!this.newCrop.name || !this.newCrop.sowingDate || !this.newCrop.harvestDate || !this.newCrop.status) {
       alert('Please fill all required fields.');
       return;
     }
 
+    const isAdding = !this.isEditing;
+
+    // Case: file selected → upload first
     if (this.selectedImageFile) {
       const formData = new FormData();
       formData.append('image', this.selectedImageFile);
-
-      console.log('Uploading image to server...');
 
       this.http.post<{ imageUrl: string }>('http://localhost:5000/api/uploads/crop-image', formData, {
         withCredentials: true
       }).subscribe({
         next: (res) => {
-          console.log('Image upload success:', res);
-          this.submitCropWithImage(res.imageUrl);
+          console.log('✅ Image upload success:', res);
+          this.submitCropWithImage(res.imageUrl); // Use uploaded URL
         },
         error: (err) => {
-          console.error('Image upload failed:', err.message);
+          console.error('❌ Image upload failed:', err.message);
           alert('Image upload failed. Please try again.');
         }
       });
     } else {
-      console.warn('No image selected, skipping upload.');
-      this.submitCropWithImage();
+      // No new file selected
+      if (isAdding) {
+        // Add new crop → placeholder if no image
+        this.submitCropWithImage('https://via.placeholder.com/150');
+      } else {
+        // Edit crop → keep old image OR blank if removed
+        this.submitCropWithImage();
+      }
     }
   }
 
+
+
+  // submitCropWithImage(imageUrl?: string) {
+  //   const updatedCrop = {
+  //     ...this.newCrop,
+  //     season: this.seasonBadge || this.newCrop.season,
+  //     imageUrl: imageUrl || this.newCrop.imageUrl || 'https://via.placeholder.com/150',
+  //     timeSinceSowed: this.getTimeSinceSowed(this.newCrop.sowingDate)
+  //   };
+
+  //   if (this.isEditing && this.currentEditingCropId) {
+  //     this.cropService.updateCrop(this.currentEditingCropId, updatedCrop).subscribe({
+  //       next: (updated) => {
+  //         const index = this.crops.findIndex(c => c._id === this.currentEditingCropId);
+  //         if (index !== -1) this.crops[index] = updated;
+  //         this.closeAddCropModal();
+  //       },
+  //       error: (err) => {
+  //         console.error('Error updating crop:', err.message);
+  //         alert('Failed to update crop.');
+  //       }
+  //     });
+  //   } else {
+  //     this.cropService.addCrop(updatedCrop).subscribe({
+  //       next: (savedCrop) => {
+  //         this.crops.unshift(savedCrop);
+  //         this.closeAddCropModal();
+  //       },
+  //       error: (err) => {
+  //         console.error('Failed to save crop:', err.message);
+  //         alert('Error saving crop. Please try again.');
+  //       }
+  //     });
+  //   }
+  // }
+
   submitCropWithImage(imageUrl?: string) {
+    const isAdding = !this.isEditing;
+    let finalImageUrl: string;
+
+    if (this.imageRemoved) {
+      // User explicitly removed
+      finalImageUrl = '';
+    } else if (imageUrl) {
+      // Just uploaded a new file
+      finalImageUrl = imageUrl;
+    } else if (isAdding) {
+      // Add without image → placeholder
+      finalImageUrl = 'https://via.placeholder.com/150';
+    } else {
+      // Edit without touching image → keep old
+      finalImageUrl = this.newCrop.imageUrl;
+    }
+
     const updatedCrop = {
       ...this.newCrop,
       season: this.seasonBadge || this.newCrop.season,
-      imageUrl: imageUrl || this.newCrop.imageUrl || 'https://via.placeholder.com/150',
+      imageUrl: finalImageUrl,
       timeSinceSowed: this.getTimeSinceSowed(this.newCrop.sowingDate)
     };
 
     if (this.isEditing && this.currentEditingCropId) {
       this.cropService.updateCrop(this.currentEditingCropId, updatedCrop).subscribe({
         next: (updated) => {
-          const index = this.crops.findIndex(c => c._id === this.currentEditingCropId);
-          if (index !== -1) this.crops[index] = updated;
+          const i = this.crops.findIndex(c => c._id === this.currentEditingCropId);
+          if (i !== -1) this.crops[i] = updated;
           this.closeAddCropModal();
         },
         error: (err) => {
@@ -257,6 +366,9 @@ onImageSelected(event: Event): void {
       });
     }
   }
+
+
+
 
   resetForm() {
     this.newCrop = {
@@ -297,6 +409,7 @@ onImageSelected(event: Event): void {
     this.isEditing = true;
     this.currentEditingCropId = crop._id;
     this.newCrop = { ...crop };
+    this.imageRemoved = false
 
     const selectedCategory = this.cropData.find(c => c.CATEGORY === crop.category);
     this.cropOptions = selectedCategory?.CROPS || [];
@@ -337,6 +450,39 @@ onImageSelected(event: Event): void {
   viewMoreDetails(crop: any) {
     alert('Show details for: ' + crop.name);
   }
+
+  // removeImage(): void {
+  //   this.selectedImageFile = null;
+  //   this.imagePreview = null;
+
+  //   // Remove from newCrop object
+  //   this.newCrop.imageUrl = '';
+
+  //   // If editing existing crop, tell backend to remove image
+  //   if (this.isEditing && this.currentEditingCropId) {
+  //     this.cropService.removeCropImage(this.currentEditingCropId).subscribe({
+  //       next: () => {
+  //         console.log('✅ Image removed from backend');
+  //       },
+  //       error: (err) => {
+  //         console.error('❌ Failed to remove image:', err.message);
+  //       }
+  //     });
+  //   }
+  // }
+
+  removeImage(): void {
+    this.selectedImageFile = null;
+    this.imagePreview = null;
+    this.newCrop.imageUrl = ''; // Mark for blank on save
+    this.imageRemoved = true
+    // Reset file input so picking the same file works
+    if (this.imageInputRef?.nativeElement) {
+      this.imageInputRef.nativeElement.value = '';
+    }
+  }
+
+
 
   // FIELD IMAGES SECTION
   fieldImages: FieldImage[] = [
