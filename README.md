@@ -38,15 +38,49 @@ AgriTech_Platform/
 ## ⚙️ Setup Instructions
 
 ### 1. Clone the repository
-```bash
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
 cd AgriTech_Platform
-
 ### 2. Frontend Setup (Angular)
-```bash
 cd frontend
 npm install
 ng serve --open
+Frontend runs on http://localhost:4200
+### 3. Backend Setup (Node.js + Express)
+cd backend
+npm install
+npx nodemon server.js
+Backend runs on http://localhost:3000
+---
+## ■ Connecting to MongoDB Atlas
+This project uses **MongoDB Atlas** as the database.
+1. Log in to MongoDB Atlas.
+2. Obtain the cluster connection string (from the Atlas dashboard).
+Example:
+mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority
+3. In the backend/ folder, copy .env.example to .env:
+cp .env.example .env # Linux/Mac
+copy .env.example .env # Windows (PowerShell)
+4. Update the .env file with your credentials:
+MONGO_URI=mongodb+srv://:@cluster0.abcde.mongodb.net/agritech
+PORT=3000
+5. Start the backend:
+npx nodemon server.js
+The server will automatically connect to MongoDB Atlas.
+---
+## ■ Environment Configuration
+- `.env` contains sensitive credentials and should **never** be committed to GitHub.
+- The repository’s `.gitignore` ensures `.env` is ignored.
+- Use `.env.example` to share the required variables safely.
+---
+## ■ Roadmap
+- ■ Farmer dashboard with crop management
+- ■ AI/ML pipeline for crop health detection
+- ■ Market price trend alerts
+- ■ Harvest/irrigation scheduling
+---
+## ■ License
+This project is for learning and development purposes. Licensing details can be added later
+
 
 
 
