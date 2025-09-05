@@ -33,5 +33,25 @@ AgriTech_Platform/
 - │── .gitignore # Ensures .env and node_modules are not tracked
 
 
+---
+
+## ⚙️ Setup Instructions
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
+cd AgriTech_Platform
+
+**### 2. Frontend Setup (Angular)**
+```bash
+cd frontend
+npm install
+ng serve --open
+
+
+
+
+
+
 
 
