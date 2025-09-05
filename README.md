@@ -53,8 +53,10 @@ Frontend runs on http://localhost:4200
 This project uses **MongoDB Atlas** as the database.
 - Log in to MongoDB Atlas.
 - Obtain the cluster connection string (from the Atlas dashboard).
- Example:
-`mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority`
+  Example:
+````
+mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority
+```
 - In the backend/ folder, copy .env.example to .env:
 ```
 cp .env.example .env # Linux/Mac
@@ -79,6 +81,7 @@ npx nodemon server.js
 ```
 
 ---
+
 
 
 
