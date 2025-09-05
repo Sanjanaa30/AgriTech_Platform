@@ -42,6 +42,8 @@ AgriTech_Platform/
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
 cd AgriTech_Platform
 
+--
+
 ### 2. Frontend Setup (Angular)
 cd frontend
 npm install
@@ -83,6 +85,7 @@ The server will automatically connect to MongoDB Atlas.
 ---
 ## ■ License
 This project is for learning and development purposes. Licensing details can be added later
+
 
 
 
