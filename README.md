@@ -42,11 +42,12 @@ AgriTech_Platform/
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
 cd AgriTech_Platform
 
-**### 2. Frontend Setup (Angular)**
+### 2. Frontend Setup (Angular)
 ```bash
 cd frontend
 npm install
 ng serve --open
+
 
 
 
