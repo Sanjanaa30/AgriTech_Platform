@@ -34,7 +34,7 @@ This project integrates a modern frontend, backend services, and MongoDB Atlas f
 
 ---
 
-## ■■ Setup Instructions
+## Setup Instructions
 ### 1. Clone the repository
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
 cd AgriTech_Platform
@@ -42,6 +42,7 @@ cd AgriTech_Platform
 cd frontend
 npm install
 ng serve --open
+
 
 
 
