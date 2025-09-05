@@ -51,18 +51,21 @@ Frontend runs on http://localhost:4200
 
 ### 3.  Connecting to MongoDB Atlas
  This project uses **MongoDB Atlas** as the database.
+
  1. Log in to MongoDB Atlas.
  2. Obtain the cluster connection string (from the Atlas dashboard).
  Example:
- mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority
- 3. In the backend/ folder, copy .env.example to .env:
+ 'mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority' 
+ 4. In the backend/ folder, copy .env.example to .env:
  cp .env.example .env # Linux/Mac
  copy .env.example .env # Windows (PowerShell)
- 4. Update the .env file with your credentials:
+ 5. Update the .env file with your credentials:
  MONGO_URI=mongodb+srv://:@cluster0.abcde.mongodb.net/agritech
  PORT=3000
- 5. Start the backend:
- npx nodemon server.js
+ 6. Start the backend:
+```
+npx nodemon server.js
+```
  The server will automatically connect to MongoDB Atlas.
 
 ### 4. Backend Setup (Node.js + Express)
@@ -73,6 +76,7 @@ npx nodemon server.js
 ```
 
 ---
+
 
 
 
