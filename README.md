@@ -24,42 +24,22 @@ This project integrates a modern frontend, backend services, and MongoDB Atlas f
 
 ---
 
-## 📂 Project Structure
+## ■ Project Structure
 AgriTech_Platform/
-│── frontend/ # Angular app (farmer dashboard, UI components)
-│── backend/ # Node.js/Express backend APIs
-│── ml-services/ # (optional) FastAPI-based ML modules for AI/ML features
-│── README.md # Project documentation
-│── .gitignore # Ensures .env and node_modules are not tracked
-
-yaml
-Copy code
-
+■■■ frontend/ # Angular app (farmer dashboard, UI components)
+■■■ backend/ # Node.js/Express backend APIs
+■■■ ml-services/ # (optional) FastAPI-based ML modules for AI/ML features
+■■■ README.md # Project documentation
+■■■ .gitignore # Ensures .env and node_modules are not tracked
 ---
-
-## ⚙️ Setup Instructions
-
+## ■■ Setup Instructions
 ### 1. Clone the repository
-```bash
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
 cd AgriTech_Platform
-2. Frontend Setup (Angular)
-bash
-Copy code
+### 2. Frontend Setup (Angular)
 cd frontend
 npm install
 ng serve --open
-Frontend runs on http://localhost:4200
-
-3. Backend Setup (Node.js + Express)
-bash
-Copy code
-cd backend
-npm install
-npx nodemon server.js
-Backend runs on http://localhost:3000
-
-
 
 
 
