@@ -34,7 +34,7 @@ This project integrates a modern frontend, backend services, and MongoDB Atlas f
 
 ---
 
-## Setup Instructions
+## ⚙️ Setup Instructions
 ### 1. Clone the repository
 ```
 git clone https://github.com/Sanjanaa30/AgriTech_Platform.git
@@ -82,7 +82,7 @@ npx nodemon server.js
 
 ---
 
-## Environment Configuration 
+## 🔒 Environment Configuration 
 - `.env` contains sensitive credentials and should **never** be committed to GitHub.
 - The repository’s `.gitignore` ensures `.env` is ignored.
 - Use `.env.example` to share the required variables safely.  
@@ -99,6 +99,7 @@ npx nodemon server.js
 
 ## Note
  This project is only for learning and development purposes. 
+
 
 
 
