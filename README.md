@@ -83,22 +83,23 @@ npx nodemon server.js
 ---
 
 ## Environment Configuration 
-`.env` contains sensitive credentials and should **never** be committed to GitHub.  
-The repository’s `.gitignore` ensures `.env` is ignored.  
-Use `.env.example` to share the required variables safely.  
+- `.env` contains sensitive credentials and should **never** be committed to GitHub.
+- The repository’s `.gitignore` ensures `.env` is ignored.
+- Use `.env.example` to share the required variables safely.  
 
 ---
 
 ## Roadmap
- Farmer dashboard with crop management
- AI/ML pipeline for crop health detection
- Market price trend alerts
- Harvest/irrigation scheduling
+- Farmer dashboard with crop management
+- AI/ML pipeline for crop health detection
+- Market price trend alerts
+- Harvest/irrigation scheduling
 
 ---
 
 ## Note
  This project is only for learning and development purposes. 
+
 
 
 
