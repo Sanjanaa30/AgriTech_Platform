@@ -50,19 +50,22 @@ ng serve --open
 Frontend runs on http://localhost:4200
 
 ### 3.  Connecting to MongoDB Atlas
- This project uses **MongoDB Atlas** as the database.
-
- 1. Log in to MongoDB Atlas.
- 2. Obtain the cluster connection string (from the Atlas dashboard).
+This project uses **MongoDB Atlas** as the database.
+- Log in to MongoDB Atlas.
+- Obtain the cluster connection string (from the Atlas dashboard).
  Example:
- 'mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority' 
- 4. In the backend/ folder, copy .env.example to .env:
- cp .env.example .env # Linux/Mac
- copy .env.example .env # Windows (PowerShell)
- 5. Update the .env file with your credentials:
- MONGO_URI=mongodb+srv://:@cluster0.abcde.mongodb.net/agritech
- PORT=3000
- 6. Start the backend:
+`mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority`
+- In the backend/ folder, copy .env.example to .env:
+```
+cp .env.example .env # Linux/Mac
+copy .env.example .env # Windows (PowerShell)
+```
+- Update the .env file with your credentials:
+```
+MONGO_URI=mongodb+srv://:@cluster0.abcde.mongodb.net/agritech
+PORT=3000
+```
+- Start the backend:
 ```
 npx nodemon server.js
 ```
@@ -76,6 +79,7 @@ npx nodemon server.js
 ```
 
 ---
+
 
 
 
