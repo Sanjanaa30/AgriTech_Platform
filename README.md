@@ -25,12 +25,12 @@ This project integrates a modern frontend, backend services, and MongoDB Atlas f
 ---
 
 ## 📂 Project Structure
-- AgriTech_Platform/
-
-frontend/ # Angular app (farmer dashboard, UI components)
+AgriTech_Platform/
+│── frontend/ # Angular app (farmer dashboard, UI components)
 - │── backend/ # Node.js/Express backend APIs
 - │── ml-services/ # (optional) FastAPI-based ML modules for AI/ML features
 - │── README.md # Project documentation
 - │── .gitignore # Ensures .env and node_modules are not tracked
+
 
 
