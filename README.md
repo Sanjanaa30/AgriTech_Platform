@@ -55,7 +55,7 @@ This project uses **MongoDB Atlas** as the database.
 - Obtain the cluster connection string (from the Atlas dashboard).
   Example:
 ```
-mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority
+mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w=majority
 ```
 - In the backend/ folder, copy .env.example to .env:
 ```
@@ -64,8 +64,8 @@ copy .env.example .env # Windows (PowerShell)
 ```
 - Update the .env file with your credentials:
 ```
-MONGO_URI=mongodb+srv://:@cluster0.abcde.mongodb.net/agritech
-PORT=3000
+MONGO_URI=mongodb+srv://<username>:<password>@cluster0.abcde.mongodb.net/agritech
+PORT=5000
 ```
 - Start the backend:
 ```
@@ -81,6 +81,23 @@ npx nodemon server.js
 ```
 
 ---
+
+## Environment Configuration 
+`.env` contains sensitive credentials and should **never** be committed to GitHub.
+The repository’s `.gitignore` ensures `.env` is ignored.
+Use `.env.example` to share the required variables safely.
+
+---
+## Roadmap
+ Farmer dashboard with crop management
+ AI/ML pipeline for crop health detection
+ Market price trend alerts
+ Harvest/irrigation scheduling
+
+---
+
+## Note
+ This project is only for learning and development purposes. 
 
 
 
