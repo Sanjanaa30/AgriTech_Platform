@@ -54,7 +54,7 @@ This project uses **MongoDB Atlas** as the database.
 - Log in to MongoDB Atlas.
 - Obtain the cluster connection string (from the Atlas dashboard).
   Example:
-````
+```
 mongodb+srv://:@cluster0.abcde.mongodb.net/agritech?retryWrites=true&w;=majority
 ```
 - In the backend/ folder, copy .env.example to .env:
@@ -81,6 +81,7 @@ npx nodemon server.js
 ```
 
 ---
+
 
 
 
