@@ -48,7 +48,7 @@ exports.registerUser = async (req, res) => {
 
 // ✅ Step 2: Save user after OTP verification
 // ✅ Step 2: Save user after OTP verification
-exports.registerAfterOtp = async (req, res) => {
+exports. registerAfterOtp = async (req, res) => {
   const { otp, userData } = req.body;
 
   const normalizedData = Object.fromEntries(
