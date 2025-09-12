@@ -26,7 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 // MongoDB
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URL)
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch(err => console.error('❌ MongoDB Error:', err));
 
