@@ -15,5 +15,20 @@ env/
 .DS_Store
 Thumbs.db
 
-#backend
+# Backend environment
 backend/.env
+
+# Root/local environment
+.env
+venv
+
+# Large local datasets (never commit!)
+datasets/
+data/
+
+# Ignore Python virtual environments
+ml-server/venv/
+
+# Ignore Python cache
+__pycache__/
+*.pyc
