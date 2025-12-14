@@ -13,6 +13,8 @@ const logoutRoutes = require('./routes/logoutRoutes');
 const authRoutes = require('./routes/authRoutes');
 const cropRoutes = require('./routes/cropRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const marketplaceRoutes = require('./routes/marketplaceRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 const path = require('path'); // ✅ Added this
 
 
@@ -42,6 +44,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/crops', cropRoutes);
 app.use('/api/uploads', uploadRoutes);
+app.use('/api/marketplace', marketplaceRoutes);
+app.use('/api/orders', orderRoutes);
 app.use('/uploads/crops', express.static(path.join(__dirname, 'uploads/crops')));
 
 const PORT = process.env.PORT || 5000;

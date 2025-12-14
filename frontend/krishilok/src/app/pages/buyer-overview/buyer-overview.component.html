@@ -1,0 +1,101 @@
+<div class="p-6 max-w-7xl mx-auto">
+  <!-- Welcome Section -->
+  <div class="bg-gradient-to-r from-blue-600 to-blue-800 text-white rounded-lg shadow-lg p-8 mb-6">
+    <h1 class="text-3xl font-bold mb-2">Welcome, {{ username }}!</h1>
+    <p class="text-blue-100">Explore the marketplace and find fresh produce from local farmers</p>
+  </div>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <!-- Total Orders -->
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+      (click)="navigateTo('orders')">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Total Orders</p>
+          <p class="text-3xl font-bold text-gray-900 mt-2">{{ ordersCount }}</p>
+        </div>
+        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pending Orders -->
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+      (click)="navigateTo('orders')">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Pending Orders</p>
+          <p class="text-3xl font-bold text-orange-600 mt-2">{{ pendingOrders }}</p>
+        </div>
+        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Delivered Orders -->
+    <div class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+      (click)="navigateTo('orders')">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-gray-500 text-sm font-medium">Delivered</p>
+          <p class="text-3xl font-bold text-green-600 mt-2">{{ deliveredOrders }}</p>
+        </div>
+        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="bg-white rounded-lg shadow-md p-6">
+    <h2 class="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <button (click)="navigateTo('marketplace')"
+        class="flex items-center justify-between p-4 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 4h18l-1.5 9h-15L3 4zm2 11h14v5a1 1 0 01-1 1H6a1 1 0 01-1-1v-5z" />
+          </svg>
+          <div class="text-left">
+            <p class="font-semibold text-gray-900">Browse Marketplace</p>
+            <p class="text-sm text-gray-600">Find fresh crops from farmers</p>
+          </div>
+        </div>
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+
+      <button (click)="navigateTo('orders')"
+        class="flex items-center justify-between p-4 bg-green-50 hover:bg-green-100 rounded-lg transition-colors">
+        <div class="flex items-center">
+          <svg class="w-8 h-8 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+          </svg>
+          <div class="text-left">
+            <p class="font-semibold text-gray-900">View My Orders</p>
+            <p class="text-sm text-gray-600">Track your purchases</p>
+          </div>
+        </div>
+        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
