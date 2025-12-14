@@ -1,0 +1,49 @@
+<div class="relative">
+  <button (click)="toggleDropdown()"
+    class="flex items-center w-full px-3 py-2 text-white bg-green-600 rounded-lg hover:bg-green-500 transition-colors duration-200">
+    
+    <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM6 21v-2a4 4 0 014-4h0a4 4 0 014 4v2m4-6v-1a2 2 0 00-2-2h-2.5">
+      </path>
+    </svg>
+    
+    <span>Switch Role</span>
+    
+    <svg class="w-4 h-4 ml-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+    </svg>
+  </button>
+
+  <!-- Dropdown Menu -->
+  <div *ngIf="showDropdown" 
+    class="absolute left-0 right-0 mt-2 bg-white rounded-lg shadow-lg border border-gray-200 z-50 overflow-hidden">
+    
+    <div class="py-2">
+      <div class="px-4 py-2 text-xs text-gray-500 font-semibold uppercase">Available Roles</div>
+      
+      <button *ngFor="let role of availableRoles" 
+        (click)="switchToRole(role)"
+        class="w-full flex items-center px-4 py-2 text-left hover:bg-gray-100 transition-colors">
+        
+        <span class="text-2xl mr-3">{{ getRoleIcon(role) }}</span>
+        
+        <div class="flex-1">
+          <div class="font-medium text-gray-900">{{ getRoleLabel(role) }}</div>
+          <div class="text-xs text-gray-500" *ngIf="userRoles.includes(role)">Active</div>
+          <div class="text-xs text-blue-600" *ngIf="!userRoles.includes(role)">Click to add</div>
+        </div>
+        
+        <svg *ngIf="userRoles.includes(role)" class="w-5 h-5 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Click outside to close -->
+<div *ngIf="showDropdown" 
+  (click)="showDropdown = false" 
+  class="fixed inset-0 z-40">
+</div>

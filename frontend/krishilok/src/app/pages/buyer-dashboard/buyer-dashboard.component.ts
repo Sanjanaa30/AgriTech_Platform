@@ -4,11 +4,12 @@ import { Router, RouterModule, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { CanComponentDeactivate } from '../../guards/confirm-exit.guard';
 import { AuthService } from '../../services/auth.service';
+import { RoleSwitcherComponent } from '../../components/role-switcher/role-switcher.component';
 
 @Component({
   selector: 'app-buyer-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, RoleSwitcherComponent],
   templateUrl: './buyer-dashboard.component.html',
   styleUrls: ['./buyer-dashboard.component.css']
 })
@@ -102,6 +103,16 @@ export class BuyerDashboardComponent implements OnInit, CanComponentDeactivate {
   }
 
   canDeactivate(): boolean {
+    // Check if navigating to another dashboard (role switching)
+    const nextUrl = this.router.url;
+    const isDashboardNavigation = nextUrl.includes('dashboard') || nextUrl.includes('buyer-dashboard');
+    
+    // If navigating to another dashboard, allow without confirmation
+    if (isDashboardNavigation || nextUrl === '/') {
+      return true;
+    }
+    
+    // Otherwise, ask for confirmation
     const confirmExit = window.confirm('Are you sure you want to go back to the login page?');
     if (confirmExit) {
       localStorage.clear();

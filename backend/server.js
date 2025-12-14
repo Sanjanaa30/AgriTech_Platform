@@ -15,6 +15,7 @@ const cropRoutes = require('./routes/cropRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const marketplaceRoutes = require('./routes/marketplaceRoutes');
 const orderRoutes = require('./routes/orderRoutes');
+const roleRoutes = require('./routes/roleRoutes');
 const path = require('path'); // ✅ Added this
 
 
@@ -46,6 +47,7 @@ app.use('/api/crops', cropRoutes);
 app.use('/api/uploads', uploadRoutes);
 app.use('/api/marketplace', marketplaceRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/roles', roleRoutes);
 app.use('/uploads/crops', express.static(path.join(__dirname, 'uploads/crops')));
 
 const PORT = process.env.PORT || 5000;
