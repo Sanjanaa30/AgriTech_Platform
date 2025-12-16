@@ -1,0 +1,130 @@
+<div class="p-6 max-w-7xl mx-auto">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">My Orders</h1>
+
+  <!-- Filter Tabs -->
+  <div class="flex gap-2 mb-6 overflow-x-auto">
+    <button (click)="filterStatus = 'all'"
+            [class.bg-green-600]="filterStatus === 'all'"
+            [class.text-white]="filterStatus === 'all'"
+            [class.bg-gray-100]="filterStatus !== 'all'"
+            [class.text-gray-700]="filterStatus !== 'all'"
+            class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition">
+      All ({{ orders.length }})
+    </button>
+    <button (click)="filterStatus = 'pending'"
+            [class.bg-green-600]="filterStatus === 'pending'"
+            [class.text-white]="filterStatus === 'pending'"
+            [class.bg-gray-100]="filterStatus !== 'pending'"
+            [class.text-gray-700]="filterStatus !== 'pending'"
+            class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition">
+      Pending
+    </button>
+    <button (click)="filterStatus = 'confirmed'"
+            [class.bg-green-600]="filterStatus === 'confirmed'"
+            [class.text-white]="filterStatus === 'confirmed'"
+            [class.bg-gray-100]="filterStatus !== 'confirmed'"
+            [class.text-gray-700]="filterStatus !== 'confirmed'"
+            class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition">
+      Confirmed
+    </button>
+    <button (click)="filterStatus = 'shipped'"
+            [class.bg-green-600]="filterStatus === 'shipped'"
+            [class.text-white]="filterStatus === 'shipped'"
+            [class.bg-gray-100]="filterStatus !== 'shipped'"
+            [class.text-gray-700]="filterStatus !== 'shipped'"
+            class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition">
+      Shipped
+    </button>
+    <button (click)="filterStatus = 'delivered'"
+            [class.bg-green-600]="filterStatus === 'delivered'"
+            [class.text-white]="filterStatus === 'delivered'"
+            [class.bg-gray-100]="filterStatus !== 'delivered'"
+            [class.text-gray-700]="filterStatus !== 'delivered'"
+            class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition">
+      Delivered
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-12">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-green-500 border-t-transparent"></div>
+    <p class="mt-4 text-gray-600">Loading orders...</p>
+  </div>
+
+  <!-- Orders List -->
+  <div *ngIf="!loading && filteredOrders.length > 0" class="space-y-4">
+    <div *ngFor="let order of filteredOrders" 
+         class="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition">
+      <div class="flex justify-between items-start mb-4">
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900">Order #{{ order.orderId }}</h3>
+          <p class="text-sm text-gray-600 mt-1">{{ order.createdAt | date:'medium' }}</p>
+        </div>
+        <span class="px-3 py-1 rounded-full text-xs font-medium"
+              [ngClass]="getStatusColor(order.status)">
+          {{ order.status | uppercase }}
+        </span>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <p class="text-sm text-gray-600">Crop</p>
+          <p class="font-medium text-gray-900">{{ order.cropId?.name || 'N/A' }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Quantity</p>
+          <p class="font-medium text-gray-900">{{ order.quantity }} kg</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Total Price</p>
+          <p class="font-medium text-green-600 text-lg">₹{{ order.totalPrice || 0 }}</p>
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Buyer</p>
+          <p class="font-medium text-gray-900">{{ order.buyerId?.fullName || 'N/A' }}</p>
+        </div>
+      </div>
+
+      <div *ngIf="order.deliveryAddress" class="mb-4">
+        <p class="text-sm text-gray-600">Delivery Address</p>
+        <p class="text-gray-900">{{ order.deliveryAddress }}</p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex gap-2" *ngIf="order.status === 'pending'">
+        <button (click)="updateOrderStatus(order, 'confirmed')"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm">
+          Confirm Order
+        </button>
+        <button (click)="updateOrderStatus(order, 'cancelled')"
+                class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm">
+          Reject Order
+        </button>
+      </div>
+      
+      <div *ngIf="order.status === 'confirmed'" class="flex gap-2">
+        <button (click)="updateOrderStatus(order, 'shipped')"
+                class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm">
+          Mark as Shipped
+        </button>
+      </div>
+
+      <div *ngIf="order.status === 'shipped'" class="flex gap-2">
+        <button (click)="updateOrderStatus(order, 'delivered')"
+                class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm">
+          Mark as Delivered
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredOrders.length === 0" class="text-center py-12">
+    <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+    </svg>
+    <h3 class="mt-4 text-xl font-medium text-gray-900">No orders found</h3>
+    <p class="mt-2 text-gray-500">You haven't received any orders yet</p>
+  </div>
+</div>

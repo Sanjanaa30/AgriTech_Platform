@@ -1,0 +1,153 @@
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <!-- Header -->
+  <div class="flex justify-between items-center mb-6">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Notifications</h1>
+      <p class="mt-1 text-sm text-gray-600">
+        <span *ngIf="unreadCount > 0" class="font-medium text-blue-600">{{ unreadCount }} unread</span>
+        <span *ngIf="unreadCount === 0">All caught up!</span>
+      </p>
+    </div>
+    <div class="flex gap-2">
+      <button 
+        *ngIf="unreadCount > 0"
+        (click)="markAllAsRead()"
+        class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+        Mark All Read
+      </button>
+      <button 
+        *ngIf="notifications.length > 0"
+        (click)="clearAllNotifications()"
+        class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+        Clear All
+      </button>
+    </div>
+  </div>
+
+  <!-- Filter Tabs -->
+  <div class="flex gap-2 mb-6 overflow-x-auto">
+    <button 
+      (click)="filterType = 'all'"
+      [class.bg-blue-600]="filterType === 'all'"
+      [class.text-white]="filterType === 'all'"
+      [class.bg-gray-100]="filterType !== 'all'"
+      [class.text-gray-700]="filterType !== 'all'"
+      class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+      All ({{ notifications.length }})
+    </button>
+    <button 
+      (click)="filterType = 'order'"
+      [class.bg-blue-600]="filterType === 'order'"
+      [class.text-white]="filterType === 'order'"
+      [class.bg-gray-100]="filterType !== 'order'"
+      [class.text-gray-700]="filterType !== 'order'"
+      class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+      Orders
+    </button>
+    <button 
+      (click)="filterType = 'system'"
+      [class.bg-blue-600]="filterType === 'system'"
+      [class.text-white]="filterType === 'system'"
+      [class.bg-gray-100]="filterType !== 'system'"
+      [class.text-gray-700]="filterType !== 'system'"
+      class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+      System
+    </button>
+    <button 
+      (click)="filterType = 'promotion'"
+      [class.bg-blue-600]="filterType === 'promotion'"
+      [class.text-white]="filterType === 'promotion'"
+      [class.bg-gray-100]="filterType !== 'promotion'"
+      [class.text-gray-700]="filterType !== 'promotion'"
+      class="px-4 py-2 rounded-lg font-medium text-sm whitespace-nowrap transition-colors">
+      Promotions
+    </button>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="text-center py-12">
+    <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-blue-500 border-t-transparent"></div>
+    <p class="mt-4 text-gray-600">Loading notifications...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && filteredNotifications.length === 0" class="text-center py-12">
+    <svg class="mx-auto h-24 w-24 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+    </svg>
+    <h3 class="mt-4 text-xl font-medium text-gray-900">No notifications</h3>
+    <p class="mt-2 text-gray-500">You're all caught up! Check back later for updates.</p>
+  </div>
+
+  <!-- Notifications List -->
+  <div *ngIf="!loading && filteredNotifications.length > 0" class="space-y-3">
+    <div *ngFor="let notification of filteredNotifications" 
+         (click)="markAsRead(notification)"
+         [class.bg-blue-50]="!notification.isRead"
+         [class.bg-white]="notification.isRead"
+         class="p-4 rounded-lg shadow-sm border hover:shadow-md transition-shadow cursor-pointer">
+      
+      <div class="flex items-start">
+        <!-- Icon -->
+        <div class="flex-shrink-0">
+          <div [ngClass]="getNotificationColor(notification.type)" 
+               class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                    [attr.d]="getNotificationIcon(notification.type)" />
+            </svg>
+          </div>
+        </div>
+
+        <!-- Content -->
+        <div class="ml-4 flex-1">
+          <div class="flex items-start justify-between">
+            <div class="flex-1">
+              <h3 class="text-base font-semibold text-gray-900">
+                {{ notification.title }}
+                <span *ngIf="!notification.isRead" 
+                      class="ml-2 inline-block w-2 h-2 bg-blue-600 rounded-full"></span>
+              </h3>
+              <p class="mt-1 text-sm text-gray-600">{{ notification.message }}</p>
+              
+              <!-- Order Action Button -->
+              <button 
+                *ngIf="notification.orderId"
+                (click)="viewOrder(notification.orderId!); $event.stopPropagation()"
+                class="mt-2 text-sm text-blue-600 hover:text-blue-800 font-medium">
+                View Order →
+              </button>
+            </div>
+
+            <!-- Delete Button -->
+            <button 
+              (click)="deleteNotification(notification._id); $event.stopPropagation()"
+              class="ml-4 text-gray-400 hover:text-red-600 transition-colors"
+              title="Delete notification">
+              <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+            </button>
+          </div>
+
+          <!-- Timestamp and Type Badge -->
+          <div class="mt-2 flex items-center gap-3">
+            <span class="text-xs text-gray-500">
+              {{ notification.createdAt | date:'short' }}
+            </span>
+            <span class="text-xs px-2 py-1 rounded-full"
+                  [ngClass]="{
+                    'bg-blue-100 text-blue-800': notification.type === 'order',
+                    'bg-gray-100 text-gray-800': notification.type === 'system',
+                    'bg-green-100 text-green-800': notification.type === 'promotion'
+                  }">
+              {{ notification.type | uppercase }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -104,4 +104,33 @@ export class BuyerMarketplaceComponent implements OnInit {
         });
     }
   }
+
+  addToWishlist(crop: Crop): void {
+    // Get existing wishlist from localStorage
+    const wishlist = localStorage.getItem('buyerWishlist');
+    const wishlistItems = wishlist ? JSON.parse(wishlist) : [];
+    
+    // Check if already in wishlist
+    const exists = wishlistItems.some((item: any) => item.cropId === crop._id);
+    if (exists) {
+      alert('This crop is already in your wishlist!');
+      return;
+    }
+    
+    // Add to wishlist
+    wishlistItems.push({
+      _id: Date.now().toString(),
+      cropId: crop._id,
+      cropName: crop.name,
+      cropImage: crop.imageUrl,
+      farmerName: crop.farmerName,
+      farmerLocation: crop.farmerLocation,
+      category: crop.category,
+      variety: crop.variety,
+      addedDate: new Date().toISOString()
+    });
+    
+    localStorage.setItem('buyerWishlist', JSON.stringify(wishlistItems));
+    alert('Added to wishlist!');
+  }
 }
